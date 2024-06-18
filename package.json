@@ -1,0 +1,28 @@
+{
+  "name": "three-demo-site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.7.2",
+    "element-plus": "^2.7.5",
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
+    "sass": "^1.77.5",
+    "sass-loader": "^14.2.1",
+    "three": "^0.165.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/compiler-sfc": "^3.4.29",
+    "vite": "^5.2.0"
+  }
+}
