@@ -1,35 +1,41 @@
 import { createRouter, createWebHistory } from "vue-router";
-const index = () => import("../view/index.vue");
+const Index = () => import("../view/Index.vue");
+const DataFlow = () => import("../view/DataFlow.vue");
+const Building = () => import("../view/Building.vue");
 
 const routes = [
   {
     path: "/",
     name: "index",
-    component: index,
+    component: Index,
     meta: {
       title: "首页",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas","house"]
     },
     menuProps: {},
   },
   {
-    path: "/test",
-    name: "test",
-    redirect: "/test/test1",
+    path: "/dataFlow",
+    name: "dataFlow",
+    component: Building,
     meta: {
-      title: "测试",
+      title: "数据流转",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas","shuffle"]
     },
     menuProps: {},
-    children: [
-      {
-        path: "/test/test1",
-        name: "test1",
-        component: index,
-        meta: {
-          title: "测试1",
-        },
-        menuProps: {},
-      }
-    ]
+  },
+  {
+    path: "/building",
+    name: "building",
+    component: DataFlow,
+    meta: {
+      title: "智慧楼宇",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas","building"]
+    },
+    menuProps: {},
   },
 ];
 

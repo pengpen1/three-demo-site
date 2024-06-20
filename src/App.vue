@@ -1,4 +1,10 @@
 <template>
+  <!-- <el-container>
+    <nav-bar />
+    <el-main><router-view></router-view></el-main>
+  </el-container> -->
+
+  <!-- TODO:el-mian有莫名的滚动条，后续手写布局 -->
   <el-container>
     <nav-bar />
     <el-main><router-view></router-view></el-main>

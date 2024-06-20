@@ -9,13 +9,14 @@
       active-text-color="#ffd04b"
       :router="true"
     >
-      <el-menu-item index="/">
-        <el-icon><House /></el-icon>
-        <span slot="title"> 首页 </span>
-      </el-menu-item>
-      <el-menu-item index="/test">
-        <el-icon><Clock /></el-icon>
-        <span slot="title">测试 </span>
+      <el-menu-item
+        v-for="menu in menus"
+        :index="menu.path"
+        :key="menu.name"
+        v-bind="menu.menuProps"
+      >
+        <font-awesome-icon :icon="menu.meta.icon ?? ['fas','splotch']" />
+        <span slot="title" class="title">{{ menu.meta.title }}</span>
       </el-menu-item>
     </el-menu>
 
@@ -29,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref , computed} from "vue";
+import { ref, computed } from "vue";
 import { routes } from "../router";
 
 const activeIndex = ref("/");
@@ -38,7 +39,11 @@ const isCollapsed = ref(false);
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
 };
-const menus = computed(() => routes)
+const menus = computed(() => {
+  return routes.filter((item) => {
+    return !item.meta.hide;
+  });
+});
 </script>
 
 <style scoped lang="scss">
@@ -49,11 +54,15 @@ const menus = computed(() => routes)
 .el-menu-vertical {
   height: 100vh;
 }
-.collapse-button{
+.collapse-button {
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.3s;
+}
+.title{
+  display: inline-block;
+  margin-left: 8px;
 }
 </style>
