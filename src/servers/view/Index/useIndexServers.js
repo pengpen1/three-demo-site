@@ -3,6 +3,7 @@ import { reactive, ref, onMounted, onBeforeUnmount } from "vue";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 // import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
+import { eventBus } from "@/utils";
 
 export default function useIndexServers({ containerRef }) {
   // 相关变量
@@ -80,11 +81,11 @@ export default function useIndexServers({ containerRef }) {
     renderer.setSize(container.offsetWidth, container.offsetHeight);
   }
   function onWindowResize() {
-    camera.aspect = container.offsetWidth / container.offsetHeight;
-    camera.updateProjectionMatrix();
     // onWindowDblclick实际只是起到更新dom元素的作用，requestFullscreen返回的是Promise所以有延迟，更新renderer的大小实际是靠resize事件
     console.log(4, container.offsetWidth, container.offsetHeight);
     renderer.setSize(container.offsetWidth, container.offsetHeight);
+    camera.aspect = container.offsetWidth / container.offsetHeight;
+    camera.updateProjectionMatrix();
   }
   function onFullscreenChange() {
     if (document.fullscreenElement) {
@@ -116,6 +117,11 @@ export default function useIndexServers({ containerRef }) {
       onFullscreenChange();
     }
   }
+
+  // 点击查看笔记处理函数
+  const clickHandler = (e) => {
+    console.log("查看笔记");
+  };
 
   const init = async () => {
     try {
@@ -204,7 +210,8 @@ export default function useIndexServers({ containerRef }) {
         renderer.render(scene, camera);
       });
 
-      container.addEventListener("resize", onWindowResize);
+      window.addEventListener("resize", onWindowResize);
+      eventBus.on("collapseChange", onWindowResize);
       document.addEventListener("dblclick", onWindowDblclick);
       document.addEventListener("fullscreenchange", onFullscreenChange); // 会在使用Fullscreen API时进入或退出全屏模式后触发
       // document.addEventListener("keydown", onKeyDownF11Change);
@@ -220,7 +227,8 @@ export default function useIndexServers({ containerRef }) {
 
   // 卸载
   onBeforeUnmount(() => {
-    container.removeEventListener("resize", onWindowResize);
+    window.removeEventListener("resize", onWindowResize);
+    eventBus.off("collapseChange", onWindowResize);
     document.removeEventListener("dblclick", onWindowDblclick);
     // 浏览器的本地全屏模式（F11）下面这个监听不到
     document.removeEventListener("fullscreenchange", onFullscreenChange);
@@ -229,5 +237,5 @@ export default function useIndexServers({ containerRef }) {
     // document.addEventListener("keydown", onKeyDownF11Change);
   });
 
-  return {};
+  return { clickHandler };
 }

@@ -15,7 +15,7 @@
         :key="menu.name"
         v-bind="menu.menuProps"
       >
-        <font-awesome-icon :icon="menu.meta.icon ?? ['fas','splotch']" />
+        <font-awesome-icon :icon="menu.meta.icon ?? ['fas', 'splotch']" />
         <span slot="title" class="title">{{ menu.meta.title }}</span>
       </el-menu-item>
     </el-menu>
@@ -30,14 +30,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { routes } from "../router";
+import { eventBus } from "@/utils";
 
 const activeIndex = ref("/");
 const isCollapsed = ref(false);
 
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
+  nextTick(() => {
+    eventBus.emit("collapseChange", isCollapsed.value);
+  });
 };
 const menus = computed(() => {
   return routes.filter((item) => {
@@ -61,7 +65,7 @@ const menus = computed(() => {
   transform: translateX(-50%);
   transition: all 0.3s;
 }
-.title{
+.title {
   display: inline-block;
   margin-left: 8px;
 }

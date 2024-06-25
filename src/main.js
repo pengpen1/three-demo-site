@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
+import useComponents from '@/components';
 
 import "element-plus/dist/index.css";
 import "./assets/common/css/index.css";
@@ -41,5 +42,6 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(router);
 app.use(ElementPlus);
+app.use(useComponents);
 
 app.mount("#app");
