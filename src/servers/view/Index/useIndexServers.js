@@ -1,9 +1,12 @@
-import { reactive, ref, onMounted, onBeforeUnmount } from "vue";
+import { reactive, ref, onMounted, onBeforeUnmount, computed } from "vue";
 // import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 // import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
 import { eventBus } from "@/utils";
+import exampleMd from "@/servers/view/Index/index.md?raw";
+import MarkdownIt from "markdown-it";
+import Prism from "prismjs";
 
 export default function useIndexServers({ containerRef }) {
   // 相关变量
@@ -123,6 +126,12 @@ export default function useIndexServers({ containerRef }) {
     console.log("查看笔记");
   };
 
+  // 获取md
+  const renderedMarkdown = computed(() => {
+    const md = new MarkdownIt();
+    return md.render(exampleMd);
+  });
+
   const init = async () => {
     try {
       container = containerRef.value || document.getElementById("world");
@@ -215,6 +224,8 @@ export default function useIndexServers({ containerRef }) {
       document.addEventListener("dblclick", onWindowDblclick);
       document.addEventListener("fullscreenchange", onFullscreenChange); // 会在使用Fullscreen API时进入或退出全屏模式后触发
       // document.addEventListener("keydown", onKeyDownF11Change);
+
+      Prism.highlightAll();
     } catch (e) {
       console.log(e);
     }
@@ -237,5 +248,5 @@ export default function useIndexServers({ containerRef }) {
     // document.addEventListener("keydown", onKeyDownF11Change);
   });
 
-  return { clickHandler };
+  return { clickHandler, exampleMd, renderedMarkdown };
 }

@@ -1,6 +1,9 @@
-html {
-  overflow-x: auto;
-  overflow-y: scroll;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* 避免出现滚动条 */
 }
 
 body,
@@ -38,7 +41,7 @@ body {
   color: #666666;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
-  padding: 0 10px;
+  padding: 0px;
   text-align: left;
 }
 
@@ -355,10 +358,6 @@ td {
   background: transparent;
 }
 
-body {
-  line-height: 1;
-}
-
 ol,
 ul {
   list-style: none;
@@ -465,14 +464,4 @@ h5,
 h6 {
   font-size: 100%;
   font-weight: normal;
-}
-
-q:before,
-q:after {
-  content: "";
-}
-
-abbr,
-acronym {
-  border: 0;
 }

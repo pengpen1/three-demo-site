@@ -4,11 +4,13 @@
     <el-main><router-view></router-view></el-main>
   </el-container> -->
 
-  <!-- TODO:el-mian有莫名的滚动条，后续手写布局 -->
-  <el-container>
-    <nav-bar />
-    <el-main><router-view></router-view></el-main>
-  </el-container>
+  <!-- 手写布局 -->
+  <div class="container">
+      <nav-bar />
+    <section class="main-container">
+      <router-view></router-view>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -29,5 +31,23 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+.main-container {
+  flex: 1;
+  flex-basis: auto;
+  display: block;
+  box-sizing: border-box;
+  /* overflow: auto不加会影响自适应 */
+  overflow: auto;
+  background-color: #ffffff;
+  padding: 20px;
+  height: 100%; 
+  /* border-left: 1px solid #eaeaea; */
 }
 </style>

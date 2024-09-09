@@ -52,11 +52,12 @@ const menus = computed(() => {
 
 <style scoped lang="scss">
 .el-aside {
+  height: 100vh;
   overflow: hidden;
   position: relative;
 }
 .el-menu-vertical {
-  height: 100vh;
+  height: 100%;
 }
 .collapse-button {
   position: absolute;

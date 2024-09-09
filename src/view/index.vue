@@ -1,18 +1,22 @@
 <script setup>
 import { ref } from "vue";
 import useIndexServers from "@/servers/view/Index/useIndexServers.js";
+import renderedJs from "@/servers/view/Index/useIndexServers.js?raw";
 
 const containerRef = ref(null);
-const { clickHandler } = useIndexServers({ containerRef });
+const { clickHandler, renderedMarkdown } = useIndexServers({ containerRef });
 </script>
 
 <template>
   <div class="index">
     <!-- <p>(双击可进入全屏，效果更佳哦)</p> -->
 
-    <div class="wrap">
+    <!-- <div class="wrap">
       <div id="world" ref="containerRef"></div>
-    </div>
+    </div> -->
+
+    <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
+    <div v-html="renderedMarkdown"></div>
 
     <Floating>
       <template v-slot:expand>
@@ -26,10 +30,6 @@ const { clickHandler } = useIndexServers({ containerRef });
 </template>
 
 <style scoped lang="scss">
-body {
-  overflow: hidden;
-  margin: 0;
-}
 .wrap {
   position: relative;
   width: 100%;
