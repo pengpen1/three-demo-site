@@ -40,7 +40,7 @@ const routes = [
 ];
 
 export default createRouter({
-  history: createWebHistory(),
+  history: createWebHistory("/three-demo-site/"),
   routes,
 });
 export { routes };
