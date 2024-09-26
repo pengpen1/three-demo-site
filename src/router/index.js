@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-const Index = () => import("../view/Index.vue");
+const Index = () => import("../view/index.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
 const Building = () => import("../view/Building.vue");
 
@@ -11,7 +11,7 @@ const routes = [
     meta: {
       title: "首页",
       hide: false, // 是否在菜单中隐藏
-      icon: ["fas","house"]
+      icon: ["fas", "house"],
     },
     menuProps: {},
   },
@@ -22,7 +22,7 @@ const routes = [
     meta: {
       title: "数据流转",
       hide: false, // 是否在菜单中隐藏
-      icon: ["fas","shuffle"]
+      icon: ["fas", "shuffle"],
     },
     menuProps: {},
   },
@@ -33,14 +33,14 @@ const routes = [
     meta: {
       title: "智慧楼宇",
       hide: false, // 是否在菜单中隐藏
-      icon: ["fas","building"]
+      icon: ["fas", "building"],
     },
     menuProps: {},
   },
 ];
 
 export default createRouter({
-  history: createWebHistory(),
+  history: createWebHistory("/three-demo-site/"),
   routes,
 });
 export { routes };
