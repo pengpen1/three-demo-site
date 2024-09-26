@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/three-demo/",
+  base: "./",
   resolve: {
     alias: {
       // 设置 '@' 别名指向 'src' 目录
