@@ -16,7 +16,9 @@
         v-bind="menu.menuProps"
       >
         <font-awesome-icon :icon="menu.meta.icon ?? ['fas', 'splotch']" />
-        <span slot="title" class="title">{{ menu.meta.title }}</span>
+        <template #title>
+          <span class="title">{{ menu.meta.title }}</span>
+        </template>
       </el-menu-item>
     </el-menu>
 

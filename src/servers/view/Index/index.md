@@ -1,4 +1,4 @@
-**概要：**因为要学习three.js，又不能总拿公司的项目当实验场所，索性就新起个项目当作演示场，这里顺便记录下步骤。
+**概要**：因为要学习three.js，又不能总拿公司的项目当实验场所，索性就新起个项目当作演示场，这里顺便记录下步骤。
 
 
 
@@ -68,7 +68,7 @@ git push -u origin main
 
 ### 项目展示
 
-![](https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20240620093606.png)
+<img src="https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20240620093606.png"  width="100%" style="object-fit: cover;" />
 
 [项目地址](https://github.com/pengpen1/three-demo-site)
 

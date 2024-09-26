@@ -5,7 +5,7 @@ import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 // import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
 import { eventBus } from "@/utils";
 import exampleMd from "@/servers/view/Index/index.md?raw";
-import MarkdownIt from "markdown-it";
+import markdownIt from "markdown-it";
 import Prism from "prismjs";
 
 export default function useIndexServers({ containerRef }) {
@@ -121,14 +121,25 @@ export default function useIndexServers({ containerRef }) {
     }
   }
 
+  const isShow = ref(false);
   // 点击查看笔记处理函数
-  const clickHandler = (e) => {
+  const clickHandler = () => {
     console.log("查看笔记");
+    isShow.value = !isShow.value;
+  };
+  // 关闭悬浮处理函数
+  const closeHandler = () => {
+    isShow.value = false;
   };
 
   // 获取md
   const renderedMarkdown = computed(() => {
-    const md = new MarkdownIt();
+    // const md = new MarkdownIt();
+    const md = markdownIt({
+      html: true,
+      linkify: true,
+      typographer: true,
+    });
     return md.render(exampleMd);
   });
 
@@ -248,5 +259,5 @@ export default function useIndexServers({ containerRef }) {
     // document.addEventListener("keydown", onKeyDownF11Change);
   });
 
-  return { clickHandler, exampleMd, renderedMarkdown };
+  return { clickHandler, closeHandler, isShow, exampleMd, renderedMarkdown };
 }

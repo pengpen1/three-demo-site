@@ -4,21 +4,28 @@ import useIndexServers from "@/servers/view/Index/useIndexServers.js";
 import renderedJs from "@/servers/view/Index/useIndexServers.js?raw";
 
 const containerRef = ref(null);
-const { clickHandler, renderedMarkdown } = useIndexServers({ containerRef });
+const { isShow, clickHandler, closeHandler, renderedMarkdown } =
+  useIndexServers({ containerRef });
 </script>
 
 <template>
   <div class="index">
-    <!-- <p>(双击可进入全屏，效果更佳哦)</p> -->
+    <div v-show="!isShow">
+      <!-- <p>(双击可进入全屏，效果更佳哦)</p> -->
 
-    <!-- <div class="wrap">
-      <div id="world" ref="containerRef"></div>
-    </div> -->
+      <div class="wrap">
+        <div id="world" ref="containerRef"></div>
+      </div>
+    </div>
 
-    <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
-    <div v-html="renderedMarkdown"></div>
+    <div  v-show="isShow">
+      <h2>源码</h2>
+      <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
+      <h2>笔记</h2>
+      <div style="text-align: left" v-html="renderedMarkdown"></div>
+    </div>
 
-    <Floating>
+    <Floating @close="closeHandler">
       <template v-slot:expand>
         <span class="text" @click="clickHandler">查看笔记</span>
       </template>
