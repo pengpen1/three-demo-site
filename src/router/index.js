@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const Index = () => import("../view/Index.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
 const Building = () => import("../view/Building.vue");
+const Readme = () => import("../view/Readme.vue");
 
 const routes = [
   {
@@ -12,6 +13,17 @@ const routes = [
       title: "首页",
       hide: false, // 是否在菜单中隐藏
       icon: ["fas", "house"],
+    },
+    menuProps: {},
+  },
+  {
+    path: "/readme",
+    name: "readme",
+    component: Readme,
+    meta: {
+      title: "readme",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas", "scroll"],
     },
     menuProps: {},
   },

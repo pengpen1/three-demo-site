@@ -6,7 +6,7 @@
 
   <!-- 手写布局 -->
   <div class="container">
-      <nav-bar />
+    <nav-bar />
     <section class="main-container">
       <router-view></router-view>
     </section>
@@ -47,7 +47,7 @@ export default defineComponent({
   overflow: auto;
   background-color: #ffffff;
   padding: 20px;
-  height: 100%; 
+  height: 100%;
   /* border-left: 1px solid #eaeaea; */
 }
 </style>

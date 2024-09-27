@@ -19,10 +19,18 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
     </div>
 
     <div :class="{ show: isShow, hide: !isShow, normal: true }">
-      <h2>源码</h2>
-      <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
-      <h2>笔记</h2>
-      <div style="text-align: left" v-html="renderedMarkdown"></div>
+      <el-scrollbar class="scrollbar">
+        <h2>源码</h2>
+        <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
+        <h2>笔记</h2>
+        <div style="text-align: left" v-html="renderedMarkdown"></div>
+      </el-scrollbar>
+      <el-backtop
+        target=".normal .el-scrollbar__wrap"
+        :right="100"
+        :visibility-height="50"
+        :bottom="100"
+      />
     </div>
 
     <Floating @close="closeHandler" :model="5" :second="2">
@@ -56,6 +64,11 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
 }
 .hide {
   display: none;
+}
+.normal {
+  .scrollbar {
+    height: 100%;
+  }
 }
 .wrap {
   position: relative;
