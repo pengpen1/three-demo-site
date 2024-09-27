@@ -48,6 +48,7 @@ const buttonStyle = computed(() => {
     top: `${top.value}px`,
     right: "0px",
     position: "fixed",
+    zIndex: "9999",
     transition: "all 0.3s",
     cursor: isDragging.value ? "grabbing" : "grab",
   };

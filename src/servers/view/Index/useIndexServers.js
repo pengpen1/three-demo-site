@@ -72,7 +72,7 @@ export default function useIndexServers({ containerRef }) {
         container.style.left = 0;
         container.style.width = "100vw";
         container.style.height = "100vh";
-        container.style.zIndex = 9999; // 确保容器在最前面
+        container.style.zIndex = 9; // 确保容器在最前面
       }
     }
     console.log("2", container.offsetWidth, container.offsetHeight); // 1920 919
@@ -98,7 +98,7 @@ export default function useIndexServers({ containerRef }) {
       container.style.left = 0;
       container.style.width = "100vw";
       container.style.height = "100vh";
-      container.style.zIndex = 9999; // 确保容器在最前面
+      container.style.zIndex = 9; // 确保容器在最前面
     } else {
       // 如果退出全屏
       container.style.position = "relative";

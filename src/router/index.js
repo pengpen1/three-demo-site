@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-const Index = () => import("../view/index.vue");
+const Index = () => import("../view/Index.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
 const Building = () => import("../view/Building.vue");
 

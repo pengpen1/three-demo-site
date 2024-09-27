@@ -10,7 +10,7 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
 
 <template>
   <div class="index">
-    <div v-show="!isShow">
+    <div>
       <!-- <p>(双击可进入全屏，效果更佳哦)</p> -->
 
       <div class="wrap">
@@ -18,25 +18,45 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
       </div>
     </div>
 
-    <div  v-show="isShow">
+    <div :class="{ show: isShow, hide: !isShow, normal: true }">
       <h2>源码</h2>
       <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
       <h2>笔记</h2>
       <div style="text-align: left" v-html="renderedMarkdown"></div>
     </div>
 
-    <Floating @close="closeHandler">
+    <Floating @close="closeHandler" :model="5" :second="2">
       <template v-slot:expand>
-        <span class="text" @click="clickHandler">查看笔记</span>
+        <span class="text" @click="clickHandler">{{
+          isShow ? "收起笔记" : "查看笔记"
+        }}</span>
       </template>
       <template v-slot:collapse>
-        <span><font-awesome-icon :icon="['fas', 'book']" /></span>
+        <span @click="clickHandler" style="cursor: pointer"
+          ><font-awesome-icon :icon="['fas', 'book']"
+        /></span>
       </template>
     </Floating>
   </div>
 </template>
 
 <style scoped lang="scss">
+.index {
+  position: relative;
+}
+.show {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #ffffff;
+}
+.hide {
+  display: none;
+}
 .wrap {
   position: relative;
   width: 100%;
