@@ -15,7 +15,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import NavBar from "./components/NavBar.vue";
+import NavBar from "./components/ui/NavBar.vue";
 
 export default defineComponent({
   components: {
@@ -45,7 +45,7 @@ export default defineComponent({
   box-sizing: border-box;
   /* overflow: auto不加会影响自适应 */
   overflow: auto;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   padding: 20px;
   height: 100%;
   /* border-left: 1px solid #eaeaea; */

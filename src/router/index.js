@@ -30,7 +30,7 @@ const routes = [
   {
     path: "/dataFlow",
     name: "dataFlow",
-    component: Building,
+    component: DataFlow,
     meta: {
       title: "数据流转",
       hide: false, // 是否在菜单中隐藏
@@ -41,7 +41,7 @@ const routes = [
   {
     path: "/building",
     name: "building",
-    component: DataFlow,
+    component: Building,
     meta: {
       title: "智慧楼宇",
       hide: false, // 是否在菜单中隐藏

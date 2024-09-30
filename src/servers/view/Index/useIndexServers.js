@@ -5,6 +5,8 @@ import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 // import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
 import { eventBus } from "@/utils";
 import exampleMd from "@/servers/view/Index/index.md?raw";
+import renderedJs from "@/servers/view/Index/useIndexServers.js?raw";
+import renderedTemplate from "@/view/Index.vue?raw";
 import markdownIt from "markdown-it";
 import Prism from "prismjs";
 
@@ -143,6 +145,18 @@ export default function useIndexServers({ containerRef }) {
     return md.render(exampleMd);
   });
 
+  // 笔记配置
+  const noteProps = computed(() => {
+    return {
+      visible: isShow.value,
+      data: [
+        { id: 1, title: "template", content: renderedTemplate, type: "code:vue" },
+        { id: 2, title: "serve", content: renderedJs, type: "code:js" },
+        { id: 3, title: "笔记", content: renderedMarkdown.value, type: "html" },
+      ],
+    };
+  });
+
   const init = async () => {
     try {
       container = containerRef.value || document.getElementById("world");
@@ -259,5 +273,12 @@ export default function useIndexServers({ containerRef }) {
     // document.addEventListener("keydown", onKeyDownF11Change);
   });
 
-  return { clickHandler, closeHandler, isShow, exampleMd, renderedMarkdown };
+  return {
+    clickHandler,
+    closeHandler,
+    isShow,
+    exampleMd,
+    renderedMarkdown,
+    noteProps,
+  };
 }

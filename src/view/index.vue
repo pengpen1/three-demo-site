@@ -4,7 +4,7 @@ import useIndexServers from "@/servers/view/Index/useIndexServers.js";
 import renderedJs from "@/servers/view/Index/useIndexServers.js?raw";
 
 const containerRef = ref(null);
-const { isShow, clickHandler, closeHandler, renderedMarkdown } =
+const { isShow, clickHandler, closeHandler, renderedMarkdown, noteProps } =
   useIndexServers({ containerRef });
 </script>
 
@@ -18,7 +18,7 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
       </div>
     </div>
 
-    <div :class="{ show: isShow, hide: !isShow, normal: true }">
+    <!-- <div :class="{ show: isShow, hide: !isShow, normal: true }">
       <el-scrollbar class="scrollbar">
         <h2>源码</h2>
         <pre><code class="language-javascript match-braces data-prismjs-copy">{{ renderedJs }}</code></pre>
@@ -31,7 +31,8 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown } =
         :visibility-height="50"
         :bottom="100"
       />
-    </div>
+    </div> -->
+    <Note v-bind="noteProps"></Note>
 
     <Floating @close="closeHandler" :model="5" :second="2">
       <template v-slot:expand>

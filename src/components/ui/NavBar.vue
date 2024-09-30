@@ -32,8 +32,9 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from "vue";
-import { routes } from "../router";
+import { ref, computed, nextTick, onMounted, watchEffect } from "vue";
+import { routes } from "../../router";
+import router from "../../router";
 import { eventBus } from "@/utils";
 
 const activeIndex = ref("/");
@@ -50,6 +51,15 @@ const menus = computed(() => {
     return !item.meta.hide;
   });
 });
+
+watchEffect(() => {
+  // TODO: 这里需要优化，调查为什么会先到"/"，再跳到实际路由
+  activeIndex.value = router.currentRoute.value.path || "/";
+});
+
+// onMounted(() => {
+//   activeIndex.value = router.currentRoute.value.path ?? "/";
+// });
 </script>
 
 <style scoped lang="scss">

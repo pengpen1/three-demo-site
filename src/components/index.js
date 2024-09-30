@@ -1,11 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 
-const Floating = defineAsyncComponent(() => import('@/components/Floating.vue'));
-const DragFloating = defineAsyncComponent(() => import('@/components/DragFloating.vue'));
+const Floating = defineAsyncComponent(() => import('@/components/ui/Floating.vue'));
+const DragFloating = defineAsyncComponent(() => import('@/components/ui/DragFloating.vue'));
+const Note = defineAsyncComponent(() => import('@/components/ui/Note.vue'));
+
 
 const components = {
   Floating,
-  DragFloating
+  DragFloating,
+  Note,
 };
 
 export default {
