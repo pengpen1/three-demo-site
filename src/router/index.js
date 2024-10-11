@@ -64,8 +64,8 @@ const routes = [
 ];
 
 export default createRouter({
-  history: createWebHistory("/three-demo-site/"),
-  // history: createWebHashHistory("/three-demo-site/"),
+  // history: createWebHistory("/three-demo-site/"),
+  history: createWebHashHistory("/three-demo-site/"),
   routes,
 });
 export { routes };
