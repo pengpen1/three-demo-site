@@ -114,12 +114,13 @@ watch(
 const updateScroll = ({ scrollTop }) => {
   notes.value.forEach((sec) => {
     // let top = content.value.scrollTop; // Window.scrollY返回文档在垂直方向已滚动的像素值 e.scrollTop
-    let offset = sec.offsetTop - 150; // 返回当前元素相对于其 offsetParent 元素的顶部内边距的距离
+    let offset = sec.offsetTop - 150; // 返回当前元素相对于其 offsetParent 元素的顶部内边距的距离,-150使标题在接近顶部时更早地被高亮，增强用户体验
     let height = sec.offsetHeight; // 返回该元素的像素高度，高度包含该元素的垂直内边距和边框，且是一个整数
     console.log(scrollTop, offset, height);
     let id = sec.getAttribute("id").replace("wrap", "");
 
     if (scrollTop >= offset && scrollTop < offset + height) {
+      // 判断滚动位置是否已达到章节顶部和是否还未超过章节底部
       activeId.value = Number(id);
       console.log("activeId", activeId.value);
     }

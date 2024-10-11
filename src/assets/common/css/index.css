@@ -6,3 +6,11 @@ body {
   overflow: hidden; /* 避免出现滚动条 */
 }
 
+/* 更改菜单颜色 */
+.el-menu {
+  --el-menu-bg-color: #383838 !important; /* 设置背景颜色 */
+  --el-menu-text-color: #f3f3f3 !important; /* 设置文字颜色 */
+  --el-menu-active-color: #75cafc !important; /* 设置激活项文字颜色 */
+}
+
+

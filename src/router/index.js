@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 const Index = () => import("../view/Index.vue");
+const Photo = () => import("../view/Photo.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
 const Building = () => import("../view/Building.vue");
 const Readme = () => import("../view/Readme.vue");
@@ -17,13 +18,13 @@ const routes = [
     menuProps: {},
   },
   {
-    path: "/readme",
-    name: "readme",
-    component: Readme,
+    path: "/photo",
+    name: "photo",
+    component: Photo,
     meta: {
-      title: "readme",
+      title: "粒子照片",
       hide: false, // 是否在菜单中隐藏
-      icon: ["fas", "scroll"],
+      icon: ["fas", "image"],
     },
     menuProps: {},
   },
@@ -46,6 +47,17 @@ const routes = [
       title: "智慧楼宇",
       hide: false, // 是否在菜单中隐藏
       icon: ["fas", "building"],
+    },
+    menuProps: {},
+  },
+  {
+    path: "/readme",
+    name: "readme",
+    component: Readme,
+    meta: {
+      title: "readme",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas", "scroll"],
     },
     menuProps: {},
   },

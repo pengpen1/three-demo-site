@@ -32,6 +32,7 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
 }
+
 .container {
   width: 100vw;
   height: 100vh;
