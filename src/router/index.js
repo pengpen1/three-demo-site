@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 const Index = () => import("../view/Index.vue");
 const Photo = () => import("../view/Photo.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
@@ -65,6 +65,7 @@ const routes = [
 
 export default createRouter({
   history: createWebHistory("/three-demo-site/"),
+  // history: createWebHashHistory("/three-demo-site/"),
   routes,
 });
 export { routes };
