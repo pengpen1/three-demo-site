@@ -2,14 +2,11 @@
 
 ## 介绍
 
-基于 three.js 以及 vue3 的示例网站，有首页里面的[梦幻星云](/three-demo-site/)、数据流转、智慧楼宇、粒子照片。点击屏幕右侧的黄色按钮可查看源码和笔记。
+基于 three.js 以及 vue3 的示例网站，有首页里面的梦幻星云、数据流转、智慧楼宇、粒子照片。点击屏幕右侧的黄色按钮可查看源码和笔记。
 
-<div style="display: flex; justify-content: space-between;flex-wrap: wrap">
-<img src="https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20241011112024.png"  width="1000" height="600" style="object-fit: cover;" />
-</div>
-<div style="display: flex; justify-content: space-between;flex-wrap: wrap">
-<img src="https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20241011111953.png"  width="1000" height="600" style="object-fit: cover;" />
-</div>
+<img src="https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20241011112024.png"  width="100%" height="600" style="object-fit: cover;" />
+
+<img src="https://cdn.jsdelivr.net/gh/pengpen1/blog-images/20241011111953.png"  width="100%" height="600" style="object-fit: cover;" />
 
 ## 核心开发人员
 
@@ -28,4 +25,4 @@
 - [x] 完成全屏切换的监听，包含F11,esc,双击
 - [x] 优化笔记：1.下拉超过一屏高度出现滚动到顶小飞机 2.增加章节菜单
 - [x] 优化菜单样式：至少把颜色换鲜艳点
-
+- [ ] 刷新问题
