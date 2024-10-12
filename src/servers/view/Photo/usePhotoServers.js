@@ -1,8 +1,6 @@
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from "vue";
-// import * as THREE from "three";
-import * as THREE from "https://cdn.skypack.dev/three@0.120.0";
+import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import  THREE from "@/servers/view/Common/trackballControls.js";
 import { eventBus } from "@/utils";
 import exampleMd from "@/servers/view/Photo/photo.md?raw";
 import renderedJs from "@/servers/view/Photo/usePhotoServers.js?raw";
