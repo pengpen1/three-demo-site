@@ -13,12 +13,12 @@
 
 ## 核心开发人员
 
-- [pengpen1](https://github.com/pengpen1)
-- [linzhe141](https://github.com/linzhe141)
+- pengpen1 ~ [pengpen1的github主页](https://github.com/pengpen1) ~ [pengpen1的个人博客](https://pengpen1.github.io/)
+- linzhe141 ~ [linzhe141的github主页](https://github.com/linzhe141) ~ [linzhe141的个人博客](https://blog-linzhe.vercel.app/readme)
 
 ## TODO
 
-- [x] 照片与粒子
+- [√] 照片与粒子
 
 - [ ] 数据流转
 
