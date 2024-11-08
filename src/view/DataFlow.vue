@@ -3,8 +3,14 @@ import { ref } from "vue";
 import useDataFlowServers from "@/servers/view/DataFlow/useDataFlowServers.js";
 
 const containerRef = ref(null);
-const { isShow, clickHandler, closeHandler, renderedMarkdown, noteProps } =
-  useDataFlowServers({ containerRef });
+const {
+  isShow,
+  clickHandler,
+  closeHandler,
+  renderedMarkdown,
+  noteProps,
+  wrap,
+} = useDataFlowServers({ containerRef });
 </script>
 
 <template>
@@ -12,11 +18,10 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown, noteProps } =
     <div>
       <!-- <p>(双击可进入全屏，效果更佳哦)</p> -->
 
-      <div class="wrap">
+      <div class="wrap" ref="wrap">
         <div id="container" ref="containerRef"></div>
       </div>
     </div>
-
 
     <Note v-bind="noteProps"></Note>
 
@@ -43,7 +48,7 @@ const { isShow, clickHandler, closeHandler, renderedMarkdown, noteProps } =
   position: relative;
   width: 100%;
 }
-#world {
+#container {
   width: 100%;
   height: calc(100vh - 40px);
   overflow: hidden;

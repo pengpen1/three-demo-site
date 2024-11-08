@@ -9,9 +9,11 @@ import renderedJs from "@/servers/view/DataFlow/useDataFlowServers.js?raw";
 import renderedTemplate from "@/view/DataFlow.vue?raw";
 import markdownIt from "markdown-it";
 import Prism from "prismjs";
+import background from "@/assets/common/img/dataFlow/background.png";
 
 export default function useDataFlowServers({ containerRef }) {
   // 相关变量
+  const wrap = ref(null);
   let container;
   let camera, scene, renderer;
   const splineHelperObjects = [];
@@ -143,6 +145,7 @@ export default function useDataFlowServers({ containerRef }) {
   }
 
   function onPointerDown(event) {
+    console.log("onPointerDown", container.offsetWidth, container.offsetHeight);
     onDownPosition.x = event.clientX;
     onDownPosition.y = event.clientY;
   }
@@ -158,8 +161,8 @@ export default function useDataFlowServers({ containerRef }) {
   }
 
   function onPointerMove(event) {
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    pointer.x = (event.clientX / container.offsetWidth) * 2 - 1;
+    pointer.y = -(event.clientY / container.offsetHeight) * 2 + 1;
 
     raycaster.setFromCamera(pointer, camera);
 
@@ -216,6 +219,10 @@ export default function useDataFlowServers({ containerRef }) {
     renderer.setSize(container.offsetWidth, container.offsetHeight);
     camera.aspect = container.offsetWidth / container.offsetHeight;
     camera.updateProjectionMatrix();
+
+    // 更新renderer的大小
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    render();
   }
   function onFullscreenChange() {
     if (document.fullscreenElement) {
@@ -284,15 +291,34 @@ export default function useDataFlowServers({ containerRef }) {
       container = document.getElementById("container");
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf0f0f0);
+      // scene.background = new THREE.Color(0xf0f0f0); // 设置场景背景颜色
+      // 设置全景图
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(
+        background,
+        // onLoad 回调
+        (texture) => {
+          scene.background = texture;
+          scene.environment = texture;
+          render();
+        },
+        // onProgress 回调
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        // onError 回调
+        (error) => {
+          console.error("An error occurred while loading the texture", error);
+        }
+      );
 
       camera = new THREE.PerspectiveCamera(
         70,
-        window.innerWidth / window.innerHeight,
+        container.offsetWidth / container.offsetHeight,
         1,
         10000
       );
-      camera.position.set(0, 250, 1000);
+      camera.position.set(0, 550, 800);
       scene.add(camera);
 
       scene.add(new THREE.AmbientLight(0xf0f0f0, 3));
@@ -320,15 +346,21 @@ export default function useDataFlowServers({ containerRef }) {
       plane.receiveShadow = true;
       scene.add(plane);
 
-      const helper = new THREE.GridHelper(2000, 100);
-      helper.position.y = -199;
-      helper.material.opacity = 0.25;
-      helper.material.transparent = true;
-      scene.add(helper);
+      // 辅助观察坐标系
+      // 红R、绿G、蓝B分别对应坐标系的x、y、z轴，对于three.js的3D坐标系默认y轴朝上。
+      const axes = new THREE.AxesHelper(800);
+      scene.add(axes);
+
+      // 创建网格
+      // const helper = new THREE.GridHelper(2000, 100);
+      // helper.position.y = -199;
+      // helper.material.opacity = 0.25;
+      // helper.material.transparent = true;
+      // scene.add(helper);
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
       renderer.useLegacyLights = false;
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
@@ -349,6 +381,11 @@ export default function useDataFlowServers({ containerRef }) {
       gui.add(params, "addPoint");
       gui.add(params, "removePoint");
       gui.add(params, "exportSpline");
+      gui.domElement.style.position = "absolute";
+      gui.domElement.style.top = "0px";
+      gui.domElement.style.left = "0px";
+      gui.domElement.style.zIndex = "9999";
+      container.appendChild(gui.domElement);
       gui.open();
 
       // Controls
@@ -451,13 +488,16 @@ export default function useDataFlowServers({ containerRef }) {
         ),
       ]);
 
-      render();
-
       //   事件监听
       window.addEventListener("resize", onWindowResize);
       eventBus.on("collapseChange", onWindowResize);
       document.addEventListener("dblclick", onWindowDblclick);
       document.addEventListener("fullscreenchange", onFullscreenChange);
+
+      // 拖动事件
+      document.addEventListener("pointerdown", onPointerDown);
+      document.addEventListener("pointerup", onPointerUp);
+      document.addEventListener("pointermove", onPointerMove);
 
       Prism.highlightAll();
     } catch (e) {
@@ -468,6 +508,7 @@ export default function useDataFlowServers({ containerRef }) {
   //初始化
   onMounted(async () => {
     init();
+    render();
   });
 
   // 卸载
@@ -485,5 +526,6 @@ export default function useDataFlowServers({ containerRef }) {
     exampleMd,
     renderedMarkdown,
     noteProps,
+    wrap,
   };
 }
