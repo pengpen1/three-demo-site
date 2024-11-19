@@ -10,9 +10,14 @@ import renderedTemplate from "@/view/DataFlow.vue?raw";
 import markdownIt from "markdown-it";
 import Prism from "prismjs";
 import background from "@/assets/common/img/dataFlow/background.png";
+import texture1 from "@/assets/common/img/dataFlow/texture-1.png";
+import texture2 from "@/assets/common/img/dataFlow/texture-2.png";
+import texture3 from "@/assets/common/img/dataFlow/texture-3.png";
+import texture4 from "@/assets/common/img/dataFlow/texture-4.png";
 
 export default function useDataFlowServers({ containerRef }) {
   // 相关变量
+  const textureLoader = new THREE.TextureLoader();
   const wrap = ref(null);
   let container;
   let camera, scene, renderer;
@@ -21,12 +26,14 @@ export default function useDataFlowServers({ containerRef }) {
   const positions = [];
   const point = new THREE.Vector3();
 
-  const raycaster = new THREE.Raycaster();
+  const raycaster = new THREE.Raycaster(); // 光线投射
   const pointer = new THREE.Vector2();
   const onUpPosition = new THREE.Vector2();
   const onDownPosition = new THREE.Vector2();
 
   const geometry = new THREE.BoxGeometry(20, 20, 20);
+  let lineDashedMaterial = null;
+  let shaderMaterial = null;
   let transformControl;
 
   const ARC_SEGMENTS = 200;
@@ -34,36 +41,54 @@ export default function useDataFlowServers({ containerRef }) {
   const splines = {};
 
   const params = {
-    uniform: true,
+    uniform: false,
     tension: 0.5,
-    centripetal: true,
+    centripetal: false,
     chordal: true,
     addPoint: addPoint,
     removePoint: removePoint,
     exportSpline: exportSpline,
   };
 
-  function addSplineObject(position) {
-    const material = new THREE.MeshLambertMaterial({
-      color: Math.random() * 0xffffff,
-    });
-    const object = new THREE.Mesh(geometry, material);
+  const textureMap = {
+    1: textureLoader.load(texture1),
+    2: textureLoader.load(texture2),
+    3: textureLoader.load(texture3),
+    4: textureLoader.load(texture4),
+  };
+
+  function addSplineObject(position, index) {
+    let material = null;
+    if (index) {
+      material = new THREE.MeshBasicMaterial({
+        map: textureMap[index], // 纹理贴图
+      });
+    } else {
+      material = new THREE.MeshLambertMaterial({
+        color: Math.random() * 0xffffff,
+      });
+    }
+
+    const multiple = Math.random() * 4 + 1;
+    const geometryTemp = geometry.clone().scale(multiple, multiple, multiple);
+    const object = new THREE.Mesh(geometryTemp, material);
 
     if (position) {
       object.position.copy(position);
     } else {
       object.position.x = Math.random() * 1000 - 500;
-      object.position.y = Math.random() * 600;
+      object.position.y = Math.random() * 500;
       object.position.z = Math.random() * 800 - 400;
     }
 
-    object.castShadow = true;
-    object.receiveShadow = true;
+    object.castShadow = true; // 是否被渲染到阴影贴图中
+    object.receiveShadow = true; // 材质是否接收阴影
     scene.add(object);
     splineHelperObjects.push(object);
     return object;
   }
 
+  // 增加点
   function addPoint() {
     splinePointsLength++;
 
@@ -71,9 +96,10 @@ export default function useDataFlowServers({ containerRef }) {
 
     updateSplineOutline();
 
-    render();
+    // render();
   }
 
+  // 删除点
   function removePoint() {
     if (splinePointsLength <= 4) {
       return;
@@ -88,9 +114,10 @@ export default function useDataFlowServers({ containerRef }) {
 
     updateSplineOutline();
 
-    render();
+    // render();
   }
 
+  // 更新曲线
   function updateSplineOutline() {
     for (const k in splines) {
       const spline = splines[k];
@@ -100,8 +127,8 @@ export default function useDataFlowServers({ containerRef }) {
 
       for (let i = 0; i < ARC_SEGMENTS; i++) {
         const t = i / (ARC_SEGMENTS - 1);
-        spline.getPoint(t, point);
-        position.setXYZ(i, point.x, point.y, point.z);
+        spline.getPoint(t, point); // 获取样条曲线在t处的点,t表示样条曲线上的一个位置，0表示曲线的起点，1表示曲线的终点
+        position.setXYZ(i, point.x, point.y, point.z); //  更新 position 属性中的第 i 个点的坐标
       }
 
       position.needsUpdate = true;
@@ -116,7 +143,7 @@ export default function useDataFlowServers({ containerRef }) {
       strplace.push(`new THREE.Vector3(${p.x}, ${p.y}, ${p.z})`);
     }
 
-    console.log(strplace.join(",\n"));
+    console.log(strplace.join(",\n")); // \t缩进
     const code = "[" + strplace.join(",\n\t") + "]";
     prompt("copy and paste code", code);
   }
@@ -137,7 +164,21 @@ export default function useDataFlowServers({ containerRef }) {
     updateSplineOutline();
   }
 
-  function render() {
+  // function render() {
+  //   splines.uniform.mesh.visible = params.uniform;
+  //   splines.centripetal.mesh.visible = params.centripetal;
+  //   splines.chordal.mesh.visible = params.chordal;
+  //   renderer.render(scene, camera);
+  // }
+
+  function animate(time) {
+    requestAnimationFrame(animate);
+
+    // 动态调整 dashOffset 使虚线看起来在移动，but没有成功
+    lineDashedMaterial && (lineDashedMaterial.dashOffset -= 0.1); // 调整速度
+    // 着色器成功了
+    shaderMaterial && (shaderMaterial.uniforms.uTime.value = time * 0.001); // 将时间转换为秒
+
     splines.uniform.mesh.visible = params.uniform;
     splines.centripetal.mesh.visible = params.centripetal;
     splines.chordal.mesh.visible = params.chordal;
@@ -146,6 +187,7 @@ export default function useDataFlowServers({ containerRef }) {
 
   function onPointerDown(event) {
     console.log("onPointerDown", container.offsetWidth, container.offsetHeight);
+    // 相对于浏览器的可视区域（即视口）的位置，不受页面滚动影响
     onDownPosition.x = event.clientX;
     onDownPosition.y = event.clientY;
   }
@@ -154,24 +196,32 @@ export default function useDataFlowServers({ containerRef }) {
     onUpPosition.x = event.clientX;
     onUpPosition.y = event.clientY;
 
+    // 实现单击取消控制器
     if (onDownPosition.distanceTo(onUpPosition) === 0) {
       transformControl.detach();
-      render();
+      // render();
     }
   }
 
   function onPointerMove(event) {
-    pointer.x = (event.clientX / container.offsetWidth) * 2 - 1;
-    pointer.y = -(event.clientY / container.offsetHeight) * 2 + 1;
+    // 获取 canvas 的边界矩形信息
+    const rect = renderer.domElement.getBoundingClientRect();
 
+    // 计算相对于 canvas 的归一化设备坐标，x 和 y 范围在 (-1, 1)
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // 通过摄像机和归一化的坐标更新射线，参数1是标准化设备坐标中鼠标的二维坐标 —— X分量与Y分量应当在-1到1之间，参数2射线所来源的摄像机
     raycaster.setFromCamera(pointer, camera);
 
+    // 计算物体和射线的焦点，参数2递归若为true，则同时也会检测所有物体的后代。否则将只会检测对象本身的相交部分。默认值为true。
     const intersects = raycaster.intersectObjects(splineHelperObjects, false);
 
     if (intersects.length > 0) {
       const object = intersects[0].object;
 
       if (object !== transformControl.object) {
+        // 变换控制器的对象只会存在一个
         transformControl.attach(object);
       }
     }
@@ -222,7 +272,7 @@ export default function useDataFlowServers({ containerRef }) {
 
     // 更新renderer的大小
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    render();
+    // render();
   }
   function onFullscreenChange() {
     if (document.fullscreenElement) {
@@ -293,14 +343,13 @@ export default function useDataFlowServers({ containerRef }) {
       scene = new THREE.Scene();
       // scene.background = new THREE.Color(0xf0f0f0); // 设置场景背景颜色
       // 设置全景图
-      const textureLoader = new THREE.TextureLoader();
       textureLoader.load(
         background,
         // onLoad 回调
         (texture) => {
           scene.background = texture;
           scene.environment = texture;
-          render();
+          // render();
         },
         // onProgress 回调
         (xhr) => {
@@ -330,12 +379,15 @@ export default function useDataFlowServers({ containerRef }) {
       light.shadow.camera.near = 200;
       light.shadow.camera.far = 2000;
       light.shadow.bias = -0.000222;
+      // 默认值是 512x512 像素，较低的分辨率会导致阴影边缘出现锯齿或模糊
       light.shadow.mapSize.width = 1024;
       light.shadow.mapSize.height = 1024;
       scene.add(light);
 
+      // 创建接收阴影的平面
       const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
       planeGeometry.rotateX(-Math.PI / 2);
+      // 此材质接收阴影，但在其他方面完全透明
       const planeMaterial = new THREE.ShadowMaterial({
         color: 0x000000,
         opacity: 0.2,
@@ -367,17 +419,17 @@ export default function useDataFlowServers({ containerRef }) {
 
       const gui = new GUI();
 
-      gui.add(params, "uniform").onChange(render);
+      // gui.add(params, "uniform").onChange(render);
       gui
         .add(params, "tension", 0, 1)
         .step(0.01)
         .onChange(function (value) {
           splines.uniform.tension = value;
           updateSplineOutline();
-          render();
+          // render();
         });
-      gui.add(params, "centripetal").onChange(render);
-      gui.add(params, "chordal").onChange(render);
+      // gui.add(params, "centripetal").onChange(render);
+      // gui.add(params, "chordal").onChange(render);
       gui.add(params, "addPoint");
       gui.add(params, "removePoint");
       gui.add(params, "exportSpline");
@@ -391,11 +443,13 @@ export default function useDataFlowServers({ containerRef }) {
       // Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.damping = 0.2;
-      controls.addEventListener("change", render);
+      // controls.addEventListener("change", render);
 
       transformControl = new TransformControls(camera, renderer.domElement);
-      transformControl.addEventListener("change", render);
+      // transformControl.addEventListener("change", render);
       transformControl.addEventListener("dragging-changed", function (event) {
+        console.log("dragging-changed", event.value);
+        // 防止在拖动时更新摄像机位置
         controls.enabled = !event.value;
       });
       scene.add(transformControl);
@@ -407,29 +461,35 @@ export default function useDataFlowServers({ containerRef }) {
       /*******
        * Curves
        *********/
-
+      // 生成 splinePointsLength 个位置随机的立方体
       for (let i = 0; i < splinePointsLength; i++) {
-        addSplineObject(positions[i]);
+        addSplineObject(positions[i], i + 1);
       }
 
+      // 置空
       positions.length = 0;
 
+      // 更新
       for (let i = 0; i < splinePointsLength; i++) {
         positions.push(splineHelperObjects[i].position);
       }
 
       const geometry = new THREE.BufferGeometry();
+      // itemSize = 3 因为每个顶点都是一个三元组
+      // 类型化数组（Typed Array）。它用于处理二进制数据缓冲区，其中每个元素都被视为 32 - bit（4 字节）的浮点数。每个元素的初始值为0
+      // 生成200个顶点的缓冲几何体
       geometry.setAttribute(
         "position",
         new THREE.BufferAttribute(new Float32Array(ARC_SEGMENTS * 3), 3)
       );
 
       let curve = new THREE.CatmullRomCurve3(positions);
-      curve.curveType = "catmullrom";
+      curve.curveType = "catmullrom"; // 曲线类型:centripetal（向心参数化）弯曲较小，曲线更加平滑和稳定 |catmullrom（均匀参数化）较为敏感，可能不平滑 | chordal（弦参数化）弯曲较大，曲线更加尖锐和动态
+      //  geometry提供了一个框架，告诉渲染器需要处理多少个顶点以及它们的基本属性（如每个顶点有三个坐标分量）
       curve.mesh = new THREE.Line(
         geometry.clone(),
         new THREE.LineBasicMaterial({
-          color: 0xff0000,
+          color: 0xff0000, // 红色
           opacity: 0.35,
         })
       );
@@ -437,25 +497,55 @@ export default function useDataFlowServers({ containerRef }) {
       splines.uniform = curve;
 
       curve = new THREE.CatmullRomCurve3(positions);
-      curve.curveType = "centripetal";
-      curve.mesh = new THREE.Line(
-        geometry.clone(),
-        new THREE.LineBasicMaterial({
-          color: 0x00ff00,
-          opacity: 0.35,
-        })
-      );
+      curve.curveType = "centripetal"; // 绿色
+      lineDashedMaterial = new THREE.LineDashedMaterial({
+        color: 0x00ff00, // 绿色
+        dashSize: 15, // 虚线长度
+        gapSize: 10, // 虚线间隙
+        linewidth: 5, // 线宽（注意：在大多数平台上，WebGL 不支持 linewidth > 1）
+        opacity: 1,
+        transparent: true,
+      });
+      curve.mesh = new THREE.Line(geometry.clone(), lineDashedMaterial);
       curve.mesh.castShadow = true;
       splines.centripetal = curve;
 
       curve = new THREE.CatmullRomCurve3(positions);
-      curve.curveType = "chordal";
+      curve.curveType = "chordal"; // 蓝色
+      // 创建自定义 ShaderMaterial
+      shaderMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0.0 },
+          uColor1: { value: new THREE.Color(0xff0000) },
+          uColor2: { value: new THREE.Color(0x0000ff) },
+        },
+        // 顶点着色器：计算每个顶点的流动位置 vFlow，通过 mod 和 uTime 实现循环效果。
+        vertexShader: `
+    uniform float uTime;
+    varying float vFlow;
+    void main() {
+      vFlow = mod(-position.x + uTime * 10.0, 10.0) / 10.0;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+        // 片段着色器：根据 vFlow 混合两种颜色，创建流动的颜色变化效果
+        fragmentShader: `
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    varying float vFlow;
+    void main() {
+      gl_FragColor = vec4(mix(uColor1, uColor2, vFlow), 1.0);
+    }
+  `,
+        transparent: true,
+      });
       curve.mesh = new THREE.Line(
         geometry.clone(),
-        new THREE.LineBasicMaterial({
-          color: 0x0000ff,
-          opacity: 0.35,
-        })
+        shaderMaterial
+        // new THREE.LineBasicMaterial({
+        //   color: 0x0000ff,
+        //   opacity: 0.35,
+        // })
       );
       curve.mesh.castShadow = true;
       splines.chordal = curve;
@@ -465,28 +555,32 @@ export default function useDataFlowServers({ containerRef }) {
         scene.add(spline.mesh);
       }
 
-      load([
-        new THREE.Vector3(
-          289.76843686945404,
-          452.51481137238443,
-          56.10018915737797
-        ),
-        new THREE.Vector3(
-          -53.56300074753207,
-          171.49711742836848,
-          -14.495472686253045
-        ),
-        new THREE.Vector3(
-          -91.40118730204415,
-          176.4306956436485,
-          -6.958271935582161
-        ),
-        new THREE.Vector3(
-          -383.785318791128,
-          491.1365363371675,
-          47.869296953772746
-        ),
-      ]);
+      // 固定位置
+      // load([
+      //   new THREE.Vector3(
+      //     289.76843686945404,
+      //     452.51481137238443,
+      //     56.10018915737797
+      //   ),
+      //   new THREE.Vector3(
+      //     -53.56300074753207,
+      //     171.49711742836848,
+      //     -14.495472686253045
+      //   ),
+      //   new THREE.Vector3(
+      //     -91.40118730204415,
+      //     176.4306956436485,
+      //     -6.958271935582161
+      //   ),
+      //   new THREE.Vector3(
+      //     -383.785318791128,
+      //     491.1365363371675,
+      //     47.869296953772746
+      //   ),
+      // ]);
+
+      // 随机位置
+      updateSplineOutline();
 
       //   事件监听
       window.addEventListener("resize", onWindowResize);
@@ -508,7 +602,8 @@ export default function useDataFlowServers({ containerRef }) {
   //初始化
   onMounted(async () => {
     init();
-    render();
+    // render();
+    animate();
   });
 
   // 卸载
