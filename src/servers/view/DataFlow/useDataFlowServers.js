@@ -1,5 +1,6 @@
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from "vue";
 import * as THREE from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
@@ -18,6 +19,7 @@ import texture4 from "@/assets/common/img/dataFlow/texture-4.png";
 export default function useDataFlowServers({ containerRef }) {
   // 相关变量
   const textureLoader = new THREE.TextureLoader();
+  const gltfLoader = new GLTFLoader();
   const wrap = ref(null);
   let container;
   let camera, scene, renderer;
@@ -86,6 +88,21 @@ export default function useDataFlowServers({ containerRef }) {
     scene.add(object);
     splineHelperObjects.push(object);
     return object;
+
+    // gltfLoader.load('/glb/dataFlow/database.glb', function (gltf) {
+    //   const model = gltf.scene;  // 获取加载的模型对象
+    //   scene.add(model);  // 将模型添加到场景中
+
+    // if (position) {
+    //   model.position.copy(position);
+    // } else {
+    //   model.position.x = Math.random() * 1000 - 500;
+    //   model.position.y = Math.random() * 500;
+    //   model.position.z = Math.random() * 800 - 400;
+    // }
+    // }, undefined, function (error) {
+    //   console.error('Error loading GLB model:', error);
+    // });
   }
 
   // 增加点
