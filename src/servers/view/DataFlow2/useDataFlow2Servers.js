@@ -58,24 +58,44 @@ export default function useDataFlowServers({ containerRef }) {
   // 从右到左
   const modelConfig = [
     {
-      url: "/glb/dataFlow/desktop_computer.glb",
-      scale: 0.5,
+      url: "/glb/dataFlow/computer.glb",
+      scale: 5,
       rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        100,
+        76,
+        56
+      ),
     },
     {
       url: "/glb/dataFlow/data_center_low-poly.glb",
-      scale: 0.5,
+      scale: 1,
       rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        50,
+        76,
+        -14
+      ),
     },
     {
       url: "/glb/dataFlow/database.glb",
-      scale: 0.5,
+      scale: 20,
       rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        -50,
+        76,
+        -6
+      ),
     },
     {
-      url: "/glb/dataFlow/desktop_computer.glb",
-      scale: 0.5,
+      url: "/glb/dataFlow/computer.glb",
+      scale: 5,
       rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        -100,
+        76,
+        47
+      ),
     },
   ];
 
@@ -96,7 +116,7 @@ export default function useDataFlowServers({ containerRef }) {
 
   async function addSplineObject(position, index) {
     let config = modelConfig[3];
-    if (index) {
+    if (index || index === 0) {
       config = modelConfig[index % modelConfig.length];
     }
 
@@ -104,14 +124,14 @@ export default function useDataFlowServers({ containerRef }) {
     const model = gltf.scene; // 获取加载的模型对象
     model.castShadow = true; // 是否被渲染到阴影贴图中
     scene.add(model); // 将模型添加到场景中
+    model.scale.set(config.scale, config.scale, config.scale);
     splineHelperObjects.push(model);
+
 
     if (position) {
       model.position.copy(position);
     } else {
-      model.position.x = Math.random() * 1000 - 500;
-      model.position.y = Math.random() * 500;
-      model.position.z = Math.random() * 800 - 400;
+      model.position.copy(config.position);
     }
 
     return model;
@@ -374,7 +394,7 @@ export default function useDataFlowServers({ containerRef }) {
         1,
         10000
       );
-      camera.position.set(0, 550, 500);
+      camera.position.set(0, 150, 150);
       scene.add(camera);
 
       scene.add(new THREE.AmbientLight(0xf0f0f0, 3));
@@ -423,30 +443,7 @@ export default function useDataFlowServers({ containerRef }) {
       renderer.useLegacyLights = false;
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
-
-      const gui = new GUI();
-
-      // gui.add(params, "uniform").onChange(render);
-      gui
-        .add(params, "tension", 0, 1)
-        .step(0.01)
-        .onChange(function (value) {
-          splines.uniform.tension = value;
-          updateSplineOutline();
-          // render();
-        });
-      // gui.add(params, "centripetal").onChange(render);
-      // gui.add(params, "chordal").onChange(render);
-      gui.add(params, "addPoint");
-      gui.add(params, "removePoint");
-      gui.add(params, "exportSpline");
-      gui.domElement.style.position = "absolute";
-      gui.domElement.style.top = "0px";
-      gui.domElement.style.left = "0px";
-      gui.domElement.style.zIndex = "9999";
-      container.appendChild(gui.domElement);
-      gui.open();
-
+      
       // Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.damping = 0.2;
@@ -525,24 +522,24 @@ export default function useDataFlowServers({ containerRef }) {
       // 固定位置
       load([
         new THREE.Vector3(
-          289.76843686945404,
-          352.51481137238443,
-          56.10018915737797
+          100,
+          76,
+          56
         ),
         new THREE.Vector3(
-          53.56300074753207,
-          71.49711742836848,
-          -14.495472686253045
+          50,
+          76,
+          -14
         ),
         new THREE.Vector3(
-          -181.40118730204415,
-          76.4306956436485,
-          -6.958271935582161
+          -50,
+          76,
+          -6
         ),
         new THREE.Vector3(
-          -383.785318791128,
-          291.1365363371675,
-          47.869296953772746
+          -100,
+          76,
+          47
         ),
       ]);
 

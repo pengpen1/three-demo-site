@@ -47,6 +47,86 @@ export default function useBuildingServers({ containerRef }) {
     );
   };
 
+  // 从右到左
+  const modelConfig = [
+    {
+      url: "/glb/dataFlow/desktop_computer.glb",
+      scale: 50,
+      rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        289.76843686945404,
+        76,
+        56.10018915737797
+      ),
+    },
+    {
+      url: "/glb/dataFlow/data_center_low-poly.glb",
+      scale: 1,
+      rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        53.56300074753207,
+        76,
+        -14.495472686253045
+      ),
+    },
+    {
+      url: "/glb/dataFlow/database.glb",
+      scale: 20,
+      rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        -181.40118730204415,
+        76,
+        -6.958271935582161
+      ),
+    },
+    {
+      url: "/glb/dataFlow/desktop_computer.glb",
+      scale: 50,
+      rotation: [0, 0, 0],
+      position: new THREE.Vector3(
+        -383.785318791128,
+        76,
+        47.869296953772746
+      ),
+    },
+  ];
+
+  function loadGLTFModel(url) {
+    return new Promise((resolve, reject) => {
+      gltfLoader.load(
+        url, // 模型文件路径
+        (gltf) => {
+          resolve(gltf); // 模型加载成功，返回模型数据
+        },
+        undefined, // 加载进度回调
+        (error) => {
+          reject(error); // 加载失败，返回错误信息
+        }
+      );
+    });
+  }
+
+  async function addSplineObject(position, index) {
+    let config = modelConfig[3];
+    if (index || index === 0) {
+      config = modelConfig[index % modelConfig.length];
+    }
+
+    const gltf = await loadGLTFModel(config.url);
+    const model = gltf.scene; // 获取加载的模型对象
+    model.castShadow = true; // 是否被渲染到阴影贴图中
+    scene.add(model); // 将模型添加到场景中
+    model.scale.set(config.scale, config.scale, config.scale);
+
+    if (position) {
+      model.position.copy(position);
+    } else {
+      model.position.copy(config.position);
+    }
+
+    return model;
+  }
+
   // function render() {
   //   splines.uniform.mesh.visible = params.uniform;
   //   splines.centripetal.mesh.visible = params.centripetal;
@@ -176,23 +256,23 @@ export default function useBuildingServers({ containerRef }) {
       scene = new THREE.Scene();
       // scene.background = new THREE.Color(0xf0f0f0); // 设置场景背景颜色
       // 设置全景图
-    //   textureLoader.load(
-    //     background,
-    //     // onLoad 回调
-    //     (texture) => {
-    //       scene.background = texture;
-    //       scene.environment = texture;
-    //       // render();
-    //     },
-    //     // onProgress 回调
-    //     (xhr) => {
-    //       console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-    //     },
-    //     // onError 回调
-    //     (error) => {
-    //       console.error("An error occurred while loading the texture", error);
-    //     }
-    //   );
+      //   textureLoader.load(
+      //     background,
+      //     // onLoad 回调
+      //     (texture) => {
+      //       scene.background = texture;
+      //       scene.environment = texture;
+      //       // render();
+      //     },
+      //     // onProgress 回调
+      //     (xhr) => {
+      //       console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      //     },
+      //     // onError 回调
+      //     (error) => {
+      //       console.error("An error occurred while loading the texture", error);
+      //     }
+      //   );
 
       camera = new THREE.PerspectiveCamera(
         70,
@@ -233,10 +313,13 @@ export default function useBuildingServers({ containerRef }) {
 
       // 辅助观察坐标系
       // 红R、绿G、蓝B分别对应坐标系的x、y、z轴，对于three.js的3D坐标系默认y轴朝上。
-    //   const axes = new THREE.AxesHelper(800);
-    //   scene.add(axes);
+      //   const axes = new THREE.AxesHelper(800);
+      //   scene.add(axes);
 
       addModel();
+      // modelConfig.forEach((item, i) => {
+      //   addSplineObject(null, i);
+      // });
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio);
