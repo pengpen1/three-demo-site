@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from "vue-router
 const Index = () => import("../view/Index.vue");
 const Photo = () => import("../view/Photo.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
+const DataFlow2 = () => import("../view/DataFlow2.vue");
 const Building = () => import("../view/Building.vue");
 const Readme = () => import("../view/Readme.vue");
 
@@ -34,6 +35,17 @@ const routes = [
     component: DataFlow,
     meta: {
       title: "数据流转",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas", "shuffle"],
+    },
+    menuProps: {},
+  },
+  {
+    path: "/dataFlow2",
+    name: "dataFlow2",
+    component: DataFlow2,
+    meta: {
+      title: "数据流转2",
       hide: false, // 是否在菜单中隐藏
       icon: ["fas", "shuffle"],
     },
