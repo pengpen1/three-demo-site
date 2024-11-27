@@ -1,6 +1,10 @@
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+} from "three/examples/jsm/renderers/CSS2DRenderer";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
@@ -21,8 +25,8 @@ export default function useDataFlowServers({ containerRef }) {
   const textureLoader = new THREE.TextureLoader();
   const gltfLoader = new GLTFLoader();
   const wrap = ref(null);
-  let container;
-  let camera, scene, renderer;
+  let container, css2dRender;
+  let camera, scene, renderer, ring, textLabel;
   const splineHelperObjects = [];
   let splinePointsLength = 4;
   const positions = [];
@@ -61,41 +65,33 @@ export default function useDataFlowServers({ containerRef }) {
       url: "/glb/dataFlow/computer.glb",
       scale: 5,
       rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        100,
-        76,
-        56
-      ),
+      text: "数据展示",
+      position: new THREE.Vector3(100, 76, 56),
+      labelPosition: new THREE.Vector3(105, 82, 56),
     },
     {
       url: "/glb/dataFlow/data_center_low-poly.glb",
       scale: 1,
       rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        50,
-        76,
-        -14
-      ),
+      text: "数据存储",
+      position: new THREE.Vector3(50, 76, -14),
+      labelPosition: new THREE.Vector3(55, 82, -14),
     },
     {
       url: "/glb/dataFlow/database.glb",
       scale: 20,
       rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        -50,
-        76,
-        -6
-      ),
+      text: "数据处理",
+      position: new THREE.Vector3(-50, 76, -6),
+      labelPosition: new THREE.Vector3(-50, 82, -6),
     },
     {
       url: "/glb/dataFlow/computer.glb",
       scale: 5,
       rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        -100,
-        76,
-        47
-      ),
+      text: "数据采集",
+      position: new THREE.Vector3(-100, 76, 47),
+      labelPosition: new THREE.Vector3(-105, 82, 47),
     },
   ];
 
@@ -114,6 +110,151 @@ export default function useDataFlowServers({ containerRef }) {
     });
   }
 
+  function destroyObject(object) {
+    // 1. 从场景中移除物体
+    scene.remove(object);
+
+    // 2. 销毁物体的几何体
+    if (object.geometry) {
+      object.geometry.dispose();
+    }
+
+    // 3. 销毁物体的材质
+    if (object.material) {
+      if (Array.isArray(object.material)) {
+        // 如果有多个材质，则遍历销毁
+        object.material.forEach((material) => {
+          material.dispose();
+        });
+      } else {
+        // 单个材质
+        object.material.dispose();
+      }
+    }
+
+    // 4. 如果物体使用了纹理，销毁纹理
+    if (object.material && object.material.map) {
+      object.material.map.dispose();
+    }
+  }
+
+  function createTextLabel(text, position) {
+    const div = document.createElement("div");
+    div.style.position = "absolute";
+    div.style.color = "white";
+    div.style.fontSize = "20px";
+    div.textContent = text;
+
+    const label = new CSS2DObject(div);
+    label.position.set(position.x, position.y, position.z);
+    return label;
+  }
+
+  /**
+   * 初始化标签-
+   * @param {*} options 参数
+   * @param {*} container canvas内容容器
+   * @returns
+   */
+  const initCSS2DRender = (options, container) => {
+    const { width, height } = options; // 获取世界的宽高
+    const css2dRender = new CSS2DRenderer(); // 实例化css2d渲染器
+    css2dRender.setSize(width, height); // 设置渲染器的尺寸
+    css2dRender.domElement.style.position = "absolute"; // 设置定位位置
+    css2dRender.domElement.style.zIndex = 100; // 设置层级
+    css2dRender.domElement.style.left = "0px";
+    css2dRender.domElement.style.top = "0px";
+    css2dRender.domElement.style.pointerEvents = "none"; // 设置不能背选中
+    container.appendChild(css2dRender.domElement); // 插入到容器当中
+    return css2dRender;
+  };
+  /**
+   * 创建2d标签
+   * @param {*} name  标签内容
+   * @param {*} className 标签class
+   * @returns
+   */
+  const create2DTag = (name = "", className = "") => {
+    const tag = document.createElement("div");
+    // tag.innerHTML = name;
+    tag.className = className;
+    tag.style.pointerEvents = "none";
+    tag.style.visibility = "hidden";
+    tag.style.position = "absolute";
+    // 如果className不存在，用以下样式
+    if (!className) {
+      tag.style.padding = "4px";
+      tag.style.color = "#fff";
+      tag.style.fontSize = "12px";
+      tag.style.textAlign = "center";
+      tag.style.background = "rgba(0,0,0,0.6)";
+      // tag.style.borderRadius = "4px";
+    }
+    const label = new CSS2DObject(tag);
+    /**
+     * 标签初始化，
+     * @param {*} name 显示内容
+     * @param {*} point 显示坐标
+     */
+    label.init = (name, point) => {
+      const labelWrap = document.createElement("div");
+      labelWrap.innerHTML = name;
+      labelWrap.style.color = "#fff";
+      labelWrap.style.background = "rgba(198,195,195,0.6)";
+      labelWrap.style.padding = "2px 4px";
+
+      // const otherWrap = document.createElement("div");
+      // otherWrap.innerHTML = "拼音或者上报情况";
+      // otherWrap.style.color = "#fff";
+      // otherWrap.style.padding = "2px 4px";
+
+      // label.element.append(labelWrap, otherWrap);
+      label.element.append(labelWrap);
+      // label.element.style.visibility = "visible";
+      label.element.style.display = "flex";
+      label.position.copy(point);
+    };
+    /**
+     * 隐藏
+     */
+    label.hide = () => {
+      label.element.style.visibility = "hidden";
+    };
+    /**
+     * 显示
+     */
+    label.show = () => {
+      label.element.style.visibility = "visible";
+    };
+    return label;
+  };
+
+  // 递归遍历模型的所有子物体并设置每个子物体的aperturePosition
+  function setAperturePositions(
+    object,
+    key = "aperturePosition",
+    value,
+    visited = new Set()
+  ) {
+    if (visited.has(object)) return; // 避免重复遍历
+    visited.add(object); // 标记物体已访问
+
+    if (object.isMesh) {
+      // 如果是网格模型，则计算并设置aperturePosition
+      if (value instanceof THREE.Vector3) {
+        object[key] = value;
+      } else if (value instanceof Array) {
+        const position = new THREE.Vector3(...value);
+        object[key] = position;
+      }
+    }
+
+    // 递归遍历子物体,对象以及后代中执行的回调函数
+    object.traverse((child) => {
+      setAperturePositions(child, key, value, visited); // 遍历子物体
+    });
+  }
+
   async function addSplineObject(position, index) {
     let config = modelConfig[3];
     if (index || index === 0) {
@@ -123,10 +264,17 @@ export default function useDataFlowServers({ containerRef }) {
     const gltf = await loadGLTFModel(config.url);
     const model = gltf.scene; // 获取加载的模型对象
     model.castShadow = true; // 是否被渲染到阴影贴图中
+    model.receiveShadow = true; // 是否接收阴影
+    gltf.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true; // 给每个 mesh 设置投射阴影
+        child.receiveShadow = true; // 给每个 mesh 设置接收阴影
+      }
+    });
+    setAperturePositions(model, "aperturePosition", config.position); // 设置 aperturePosition
     scene.add(model); // 将模型添加到场景中
     model.scale.set(config.scale, config.scale, config.scale);
     splineHelperObjects.push(model);
-
 
     if (position) {
       model.position.copy(position);
@@ -157,6 +305,22 @@ export default function useDataFlowServers({ containerRef }) {
     //     console.error("Error loading GLB model:", error);
     //   }
     // );
+  }
+
+  // 创建底部光圈效果
+  function createGlowEffect(position) {
+    const geometry = new THREE.RingGeometry(24, 30, 32);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xffff00,
+      transparent: true,
+      opacity: 0.7,
+      side: THREE.DoubleSide, // 设置材质为双面可见
+    });
+    const ring = new THREE.Mesh(geometry, material);
+    ring.position.set(position.x, position.y - 0.5, position.z); // 设置光圈的位置
+    ring.rotation.x = -Math.PI / 2; // 使光圈平放
+    scene.add(ring); // 将光圈添加到场景
+    return ring;
   }
 
   // 增加点
@@ -251,6 +415,10 @@ export default function useDataFlowServers({ containerRef }) {
       splines.chordal.mesh.visible = params.chordal;
     }
 
+    if (css2dRender) {
+      css2dRender.render(scene, camera);
+    }
+
     renderer.render(scene, camera);
   }
 
@@ -324,6 +492,47 @@ export default function useDataFlowServers({ containerRef }) {
     camera.updateProjectionMatrix();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
   }
+  function onPointerMove(event) {
+    // 获取 canvas 的边界矩形信息
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    // 计算相对于 canvas 的归一化设备坐标，x 和 y 范围在 (-1, 1)
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // 通过摄像机和归一化的坐标更新射线，参数1是标准化设备坐标中鼠标的二维坐标 —— X分量与Y分量应当在-1到1之间，参数2射线所来源的摄像机
+    raycaster.setFromCamera(pointer, camera);
+
+    // 计算物体和射线的焦点，参数2递归若为true，则同时也会检测所有物体的后代。否则将只会检测对象本身的相交部分。默认值为true。
+    const intersects = raycaster.intersectObjects(splineHelperObjects, true);
+    if (intersects.length > 0) {
+      // const object = intersects[0].object;
+      // // 获取选中物体的全局位置
+      // const worldPosition = new THREE.Vector3();
+      // object.getWorldPosition(worldPosition);
+      // createGlowEffect(worldPosition);
+
+      const object = intersects[0].object;
+      if (ring) {
+        destroyObject(ring);
+      }
+      ring = createGlowEffect(object.aperturePosition);
+
+      // 在模型顶部显示文本标签
+      if (textLabel) {
+        destroyObject(textLabel);
+      }
+      const textPosition = new THREE.Vector3();
+      textPosition.copy(object.aperturePosition);
+      textPosition.y += 15;
+      textLabel = createTextLabel(
+        `流入：512G
+        流出：466G`,
+        textPosition
+      );
+      scene.add(textLabel); // 将文本标签添加到场景中
+    }
+  }
 
   const isShow = ref(false);
   // 点击查看笔记处理函数
@@ -366,6 +575,13 @@ export default function useDataFlowServers({ containerRef }) {
   const init = async () => {
     try {
       container = document.getElementById("container");
+      css2dRender = initCSS2DRender(
+        {
+          width: container.offsetWidth,
+          height: container.offsetHeight,
+        },
+        container
+      );
 
       scene = new THREE.Scene();
       // scene.background = new THREE.Color(0xf0f0f0); // 设置场景背景颜色
@@ -443,7 +659,7 @@ export default function useDataFlowServers({ containerRef }) {
       renderer.useLegacyLights = false;
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
-      
+
       // Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.damping = 0.2;
@@ -520,37 +736,41 @@ export default function useDataFlowServers({ containerRef }) {
       }
 
       // 固定位置
-      load([
-        new THREE.Vector3(
-          100,
-          76,
-          56
-        ),
-        new THREE.Vector3(
-          50,
-          76,
-          -14
-        ),
-        new THREE.Vector3(
-          -50,
-          76,
-          -6
-        ),
-        new THREE.Vector3(
-          -100,
-          76,
-          47
-        ),
-      ]);
+      // load([
+      //   new THREE.Vector3(100, 76, 56),
+      //   new THREE.Vector3(50, 76, -14),
+      //   new THREE.Vector3(-50, 76, -6),
+      //   new THREE.Vector3(-100, 76, 47),
+      // ]);
 
-      // 随机位置
-      // updateSplineOutline();
+      updateSplineOutline();
+
+      modelConfig.forEach((item) => {
+        const label = create2DTag();
+        scene.add(label);
+        label.init(item.text, item.position);
+        label.show();
+      });
+
+      function throttle(fn, delay) {
+        let lastTime = 0;
+
+        return function (...args) {
+          const now = Date.now();
+          if (now - lastTime >= delay) {
+            lastTime = now;
+            fn(...args);
+          }
+        };
+      }
 
       //   事件监听
       window.addEventListener("resize", onWindowResize);
       eventBus.on("collapseChange", onWindowResize);
       document.addEventListener("dblclick", onWindowDblclick);
       document.addEventListener("fullscreenchange", onFullscreenChange);
+
+      document.addEventListener("pointermove", throttle(onPointerMove, 100));
 
       Prism.highlightAll();
     } catch (e) {
@@ -560,7 +780,7 @@ export default function useDataFlowServers({ containerRef }) {
 
   //初始化
   onMounted(async () => {
-    init();
+    await init();
     // render();
     animate();
   });
@@ -571,6 +791,7 @@ export default function useDataFlowServers({ containerRef }) {
     eventBus.off("collapseChange", onWindowResize);
     document.removeEventListener("dblclick", onWindowDblclick);
     document.removeEventListener("fullscreenchange", onFullscreenChange);
+    document.removeEventListener("fullscreenchange", onPointerMove);
   });
 
   return {
