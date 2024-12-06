@@ -46,8 +46,6 @@ export default class Map3d {
     this.initLight();
     this.initAxes();
     this.initControls();
-    let gl = this.renderer.domElement.getContext("webgl");
-    gl && gl.getExtension("WEBGL_lose_context").loseContext();
     console.log(this.renderer.info);
   }
   async initModel() {}
@@ -139,7 +137,13 @@ export default class Map3d {
   initStats() {
     if (!this.options.statsVisibel) return false;
     this.stats = new Stats();
+    this.stats.dom.style.position = "absolute";
+    this.stats.dom.style.top = "0px";
+    this.stats.dom.style.left = "unset";
+    this.stats.dom.style.right = "0px";
+    this.stats.dom.style.zIndex = "99";
     this.container.appendChild(this.stats.dom);
+
   }
   initControls() {
     try {
