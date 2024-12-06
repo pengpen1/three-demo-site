@@ -90,7 +90,7 @@ const style = computed(() => {
     left: 0,
     width: "100%",
     height: "100%",
-    "z-index": 10,
+    "z-index": 110,
     "background-color": "#ffffff",
   };
 });
@@ -195,7 +195,7 @@ defineExpose({});
     gap: 20px;
     position: sticky;
     top: 0px;
-    z-index: 11;
+    z-index: 111;
     .menu-item {
       padding: 10px;
       cursor: pointer;

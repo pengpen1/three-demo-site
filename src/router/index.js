@@ -5,6 +5,7 @@ const DataFlow = () => import("../view/DataFlow.vue");
 const DataFlow2 = () => import("../view/DataFlow2.vue");
 const Building = () => import("../view/Building.vue");
 const Readme = () => import("../view/Readme.vue");
+const SuperMap = () => import("../view/SuperMap.vue");
 
 const routes = [
   {
@@ -59,6 +60,17 @@ const routes = [
       title: "智慧楼宇",
       hide: false, // 是否在菜单中隐藏
       icon: ["fas", "building"],
+    },
+    menuProps: {},
+  },
+  {
+    path: "/superMap",
+    name: "superMap",
+    component: SuperMap,
+    meta: {
+      title: "超级地图",
+      hide: false, // 是否在菜单中隐藏
+      icon: ["fas", "map"],
     },
     menuProps: {},
   },

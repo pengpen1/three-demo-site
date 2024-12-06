@@ -14,3 +14,51 @@ body {
 }
 
 
+@keyframes leftBuiding {
+  from {
+    /* left: -1000px; */
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    /* left: 0; */
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rightBuiding {
+  from {
+    /* right: -1000px; */
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    /* right: 0; */
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes imgsSettingTop {
+  from {
+    top: -400px;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes navigationBottom {
+  from {
+    bottom: -1000px;
+  }
+  to {
+    bottom: 0;
+  }
+}
