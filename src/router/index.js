@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
 const Index = () => import("../view/Index.vue");
 const Photo = () => import("../view/Photo.vue");
 const DataFlow = () => import("../view/DataFlow.vue");
@@ -84,6 +88,46 @@ const routes = [
       icon: ["fas", "scroll"],
     },
     menuProps: {},
+  },
+  {
+    path: "/study",
+    name: "study",
+    redirect: "/study/test",
+    meta: {
+      title: "记录",
+      icon: ["fas", "scroll"],
+    },
+    children: [
+      {
+        path: "/study/test",
+        name: "/study/test",
+        component: Readme,
+        meta: {
+          title: "记录1",
+          icon: ["fas", "scroll"],
+        },
+      },
+      {
+        path: "/study/test2",
+        name: "/study/test2",
+        redirect: "/study/test2/2-2",
+        meta: {
+          title: "记录2",
+          icon: ["fas", "scroll"],
+        },
+        children: [
+          {
+            path: "/study/test2/2-2",
+            name: "/study/test2/2-2",
+            component: DataFlow,
+            meta: {
+              title: "记录2-2",
+              icon: ["fas", "scroll"],
+            },
+          },
+        ],
+      },
+    ],
   },
 ];
 

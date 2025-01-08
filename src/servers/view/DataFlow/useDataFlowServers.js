@@ -1,10 +1,10 @@
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from "vue";
 import * as THREE from "three";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
-import { eventBus } from "@/utils";
+import { eventBus, getAssetUrl } from "@/utils";
 import exampleMd from "@/servers/view/DataFlow/dataFlow.md?raw";
 import renderedJs from "@/servers/view/DataFlow/useDataFlowServers.js?raw";
 import renderedTemplate from "@/view/DataFlow.vue?raw";

@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
-import { eventBus } from "@/utils";
+import { eventBus, getAssetUrl } from "@/utils";
 import exampleMd from "@/servers/view/Building/building.md?raw";
 import renderedJs from "@/servers/view/Building/useBuildingServers.js?raw";
 import renderedTemplate from "@/view/Building.vue?raw";
@@ -22,7 +22,7 @@ export default function useBuildingServers({ containerRef }) {
 
   const addModel = (position) => {
     gltfLoader.load(
-      "/glb/building/office_building.glb",
+      getAssetUrl("glb/building/office_building.glb"),
       function (gltf) {
         model = gltf.scene; // 获取加载的模型对象
         scene.add(model); // 将模型添加到场景中
@@ -46,93 +46,6 @@ export default function useBuildingServers({ containerRef }) {
       }
     );
   };
-
-  // 从右到左
-  const modelConfig = [
-    {
-      url: "/glb/dataFlow/desktop_computer.glb",
-      scale: 50,
-      rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        289.76843686945404,
-        76,
-        56.10018915737797
-      ),
-    },
-    {
-      url: "/glb/dataFlow/data_center_low-poly.glb",
-      scale: 1,
-      rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        53.56300074753207,
-        76,
-        -14.495472686253045
-      ),
-    },
-    {
-      url: "/glb/dataFlow/database.glb",
-      scale: 20,
-      rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        -181.40118730204415,
-        76,
-        -6.958271935582161
-      ),
-    },
-    {
-      url: "/glb/dataFlow/desktop_computer.glb",
-      scale: 50,
-      rotation: [0, 0, 0],
-      position: new THREE.Vector3(
-        -383.785318791128,
-        76,
-        47.869296953772746
-      ),
-    },
-  ];
-
-  function loadGLTFModel(url) {
-    return new Promise((resolve, reject) => {
-      gltfLoader.load(
-        url, // 模型文件路径
-        (gltf) => {
-          resolve(gltf); // 模型加载成功，返回模型数据
-        },
-        undefined, // 加载进度回调
-        (error) => {
-          reject(error); // 加载失败，返回错误信息
-        }
-      );
-    });
-  }
-
-  async function addSplineObject(position, index) {
-    let config = modelConfig[3];
-    if (index || index === 0) {
-      config = modelConfig[index % modelConfig.length];
-    }
-
-    const gltf = await loadGLTFModel(config.url);
-    const model = gltf.scene; // 获取加载的模型对象
-    model.castShadow = true; // 是否被渲染到阴影贴图中
-    scene.add(model); // 将模型添加到场景中
-    model.scale.set(config.scale, config.scale, config.scale);
-
-    if (position) {
-      model.position.copy(position);
-    } else {
-      model.position.copy(config.position);
-    }
-
-    return model;
-  }
-
-  // function render() {
-  //   splines.uniform.mesh.visible = params.uniform;
-  //   splines.centripetal.mesh.visible = params.centripetal;
-  //   splines.chordal.mesh.visible = params.chordal;
-  //   renderer.render(scene, camera);
-  // }
 
   function animate(time) {
     requestAnimationFrame(animate);

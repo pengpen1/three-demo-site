@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
-import { eventBus } from "@/utils";
+import { eventBus, getAssetUrl } from "@/utils";
 import exampleMd from "@/servers/view/SuperMap/superMap.md?raw";
 import renderedJs from "@/servers/view/SuperMap/useSuperMapServers.js?raw";
 import renderedTemplate from "@/view/SuperMap.vue?raw";
@@ -501,7 +501,9 @@ export default function useSuperMapServers({ containerRef }) {
   const rotatingApertureTexture = texture.load(
     "/imges/superMap/rotatingAperture.png"
   );
-  const rotatingPointTexture = texture.load("/imges/superMap/rotating-point2.png");
+  const rotatingPointTexture = texture.load(
+    "/imges/superMap/rotating-point2.png"
+  );
   const circlePoint = texture.load("/imges/superMap/circle-point.png");
   const sceneBg = texture.load("/imges/superMap/scene-bg2.png");
   textureMap.wrapS = texturefxMap.wrapS = THREE.RepeatWrapping;
@@ -608,7 +610,7 @@ export default function useSuperMapServers({ containerRef }) {
     gui.domElement.style.top = "0px";
     gui.domElement.style.left = "0px";
     gui.domElement.style.zIndex = "99";
-    container.appendChild(gui.domElement) ; 
+    container.appendChild(gui.domElement);
   };
   // 初始化旋转光圈
   const initRotatingAperture = (scene, width) => {
@@ -760,7 +762,7 @@ export default function useSuperMapServers({ containerRef }) {
       indexBol = false;
     }
 
-    const chinaData = await requestData("/json/superMap/中国轮廓.json");
+    const chinaData = await requestData(getAssetUrl("json/superMap/中国轮廓.json"));
     console.log("中国轮廓数据", chinaData);
 
     // 中国边界
@@ -1210,7 +1212,9 @@ export default function useSuperMapServers({ containerRef }) {
       Prism.highlightAll();
 
       // 中国地图数据
-      let provinceData = await requestData("/json/superMap/中华人民共和国.json");
+      let provinceData = await requestData(
+        getAssetUrl("json/superMap/中华人民共和国.json")
+      );
       console.log("原始地图数据", provinceData);
       provinceData = transfromGeoJSON(provinceData);
 
@@ -1532,7 +1536,6 @@ export default function useSuperMapServers({ containerRef }) {
       baseEarth.run();
       baseEarth.startEntranceAnimation();
       window.addEventListener("resize", resize);
-
     } catch (e) {
       console.log(e);
     }

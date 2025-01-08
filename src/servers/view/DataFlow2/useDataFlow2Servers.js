@@ -8,7 +8,7 @@ import {
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
-import { eventBus } from "@/utils";
+import { eventBus, getAssetUrl } from "@/utils";
 import exampleMd from "@/servers/view/DataFlow2/dataFlow2.md?raw";
 import renderedJs from "@/servers/view/DataFlow2/useDataFlow2Servers.js?raw";
 import renderedTemplate from "@/view/DataFlow2.vue?raw";
@@ -62,7 +62,7 @@ export default function useDataFlowServers({ containerRef }) {
   // 从右到左
   const modelConfig = [
     {
-      url: "/glb/dataFlow/computer.glb",
+      url: getAssetUrl("glb/dataFlow/computer.glb"),
       scale: 5,
       rotation: [0, 0, 0],
       text: "数据展示",
@@ -70,7 +70,7 @@ export default function useDataFlowServers({ containerRef }) {
       labelPosition: new THREE.Vector3(105, 82, 56),
     },
     {
-      url: "/glb/dataFlow/data_center_low-poly.glb",
+      url: getAssetUrl("glb/dataFlow/data_center_low-poly.glb"),
       scale: 1,
       rotation: [0, 0, 0],
       text: "数据存储",
@@ -78,7 +78,7 @@ export default function useDataFlowServers({ containerRef }) {
       labelPosition: new THREE.Vector3(55, 82, -14),
     },
     {
-      url: "/glb/dataFlow/database.glb",
+      url: getAssetUrl("glb/dataFlow/database.glb"),
       scale: 20,
       rotation: [0, 0, 0],
       text: "数据处理",
@@ -86,7 +86,7 @@ export default function useDataFlowServers({ containerRef }) {
       labelPosition: new THREE.Vector3(-50, 82, -6),
     },
     {
-      url: "/glb/dataFlow/computer.glb",
+      url: getAssetUrl("glb/dataFlow/computer.glb"),
       scale: 5,
       rotation: [0, 0, 0],
       text: "数据采集",

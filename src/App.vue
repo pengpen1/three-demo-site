@@ -15,7 +15,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import NavBar from "./components/ui/NavBar.vue";
+import NavBar from "@/components/ui/NavBar.vue";
 
 export default defineComponent({
   components: {

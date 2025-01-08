@@ -4,6 +4,7 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // 确保了构建后的文件路径是以 /three-demo-site/ 为基础的
   base: process.env.NODE_ENV === "production" ? "/three-demo-site/" : "./",
   resolve: {
     alias: {

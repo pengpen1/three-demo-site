@@ -9,17 +9,12 @@
       active-text-color="#ffd04b"
       :router="true"
     >
-      <el-menu-item
+      <MenuItem
         v-for="menu in menus"
-        :index="menu.path"
         :key="menu.name"
-        v-bind="menu.menuProps"
+        :menu="menu"
       >
-        <font-awesome-icon :icon="menu.meta.icon ?? ['fas', 'splotch']" />
-        <template #title>
-          <span class="title">{{ menu.meta.title }}</span>
-        </template>
-      </el-menu-item>
+      </MenuItem>
     </el-menu>
 
     <el-button link @click="toggleCollapse" class="collapse-button">
@@ -36,6 +31,7 @@ import { ref, computed, nextTick, onMounted, watchEffect } from "vue";
 import { routes } from "../../router";
 import router from "../../router";
 import { eventBus } from "@/utils";
+import MenuItem from "@/components/ui/MenuItem.vue";
 
 const activeIndex = ref("/");
 const isCollapsed = ref(false);
@@ -57,9 +53,6 @@ watchEffect(() => {
   activeIndex.value = router.currentRoute.value.path || "/";
 });
 
-// onMounted(() => {
-//   activeIndex.value = router.currentRoute.value.path ?? "/";
-// });
 </script>
 
 <style scoped lang="scss">
@@ -77,9 +70,5 @@ watchEffect(() => {
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.3s;
-}
-.title {
-  display: inline-block;
-  margin-left: 8px;
 }
 </style>

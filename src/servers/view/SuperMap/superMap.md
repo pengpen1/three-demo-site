@@ -38,15 +38,53 @@ camera.up.set(0, 0, 1); // 设置相机上方向为z轴
 
 
 
-- [ ] 鼠标悬浮高亮
+- [x] 鼠标悬浮高亮
 
-为什么有些区域无法获取，并不是区域无法获取，而是数据的原因，有些一个区有三个多边形，我们在赋值map.adcode时，就只赋值了一个多边形的区域
+为什么有些区域无法获取？
+
+并不是区域无法获取，而是数据的原因，有些一个区有三个多边形，我们在赋值map.adcode时，就只赋值了一个多边形的区域
 
 
 
 - [x] 下钻到区级
 
-自定义区？？
+自定义区？？https://datav.aliyun.com/portal/school/atlas/area_selector?spm=a2crr.23498931.0.0.4ad815ddHMMHNH
+
+
+
+- [ ] line2追光
+
+```
+    coordinates[0].forEach((rows) => {
+      // createVector3(rows, ChinaOutlineParams.Vector3Lines, "line1");
+      createVector3(rows, ChinaOutlineParams.Vector3Lines);
+    });
+
+    // 顶部亮线条
+    const topLineMaterial = new LineMaterial({
+      color: 0xffffff, // 可以调整为动态变化的颜色
+      opacity: 1, // 透明度
+      transparent: true, // 使线段半透明
+      linewidth: 0.0025,
+    });
+
+    ChinaOutlineParams.topGeometry = new LineGeometry();
+    ChinaOutlineParams.topGeometry.setPositions(
+      ChinaOutlineParams.Vector3Lines
+    );
+    ChinaOutlineParams.topLineMesh = new Line2(
+      ChinaOutlineParams.topGeometry,
+      topLineMaterial
+    );
+
+    ChinaOutlineParams.topLineMesh.computeLineDistances();
+```
+
+
+
+- [ ] CatmullRomCurve3 处理线条，别太坚硬
+- [ ] 动画效果
+- [ ] 封装地图皮肤
 
 
 
