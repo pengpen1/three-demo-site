@@ -1,5 +1,5 @@
 <template>
-  <el-aside width="auto" :style="{ width: isCollapsed ? '64px' : '140px' }">
+  <el-aside width="auto" :style="{ width: isCollapsed ? '64px' : '200px' }">
     <el-menu
       :default-active="activeIndex"
       class="el-menu-vertical"
@@ -9,16 +9,11 @@
       active-text-color="#ffd04b"
       :router="true"
     >
-      <MenuItem
-        v-for="menu in menus"
-        :key="menu.name"
-        :menu="menu"
-      >
-      </MenuItem>
+      <MenuItem v-for="menu in menus" :key="menu.name" :menu="menu"> </MenuItem>
     </el-menu>
 
     <el-button link @click="toggleCollapse" class="collapse-button">
-      <el-icon color="#fff">
+      <el-icon>
         <ArrowRight v-if="isCollapsed" />
         <ArrowLeft v-else />
       </el-icon>
@@ -52,23 +47,28 @@ watchEffect(() => {
   // TODO: 这里需要优化，调查为什么会先到"/"，再跳到实际路由
   activeIndex.value = router.currentRoute.value.path || "/";
 });
-
 </script>
 
 <style scoped lang="scss">
 .el-aside {
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
 }
 .el-menu-vertical {
   height: 100%;
 }
 .collapse-button {
-  position: absolute;
+  position: fixed;
+  z-index: 10;
   bottom: 10px;
-  left: 50%;
+  // left: 50%;
   transform: translateX(-50%);
-  transition: all 0.3s;
+  color: #fff !important;
+  // transition: all 0.3s;
+  &:hover {
+    color: #30bfd8 !important;
+  }
 }
 </style>

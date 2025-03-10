@@ -62,3 +62,7 @@ body {
     bottom: 0;
   }
 }
+/* 为 Prism.js 添加高优先级样式 */
+/* pre[class*="language-"] {
+  background-color: #f8f8f8 !important;
+} */

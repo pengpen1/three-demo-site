@@ -11,8 +11,8 @@ import useComponents from '@/components';
 
 import "element-plus/dist/index.css";
 import "./assets/common/css/index.css";
-// import 'prismjs/themes/prism.css';
-import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/themes/prism.css';
+// import 'prismjs/themes/prism-tomorrow.css';
 import "github-markdown-css/github-markdown.css";
 
 

@@ -10,6 +10,10 @@ const DataFlow2 = () => import("../view/DataFlow2.vue");
 const Building = () => import("../view/Building.vue");
 const Readme = () => import("../view/Readme.vue");
 const SuperMap = () => import("../view/SuperMap.vue");
+const Introduction = () => import("../view/Study/basics/introduction/Introduction.vue");
+const Transform = () => import("../view/Study/basics/transform/Transform.vue");
+const Matrix = () => import("../view/Study/basics/matrix/Matrix.vue");
+const Lights = () => import("../view/Study/classics/lights/Lights.vue");
 
 const routes = [
   {
@@ -92,37 +96,146 @@ const routes = [
   {
     path: "/study",
     name: "study",
-    redirect: "/study/test",
+    redirect: "/study/basics/introduction",
     meta: {
-      title: "记录",
-      icon: ["fas", "scroll"],
+      title: "学习记录",
+      icon: ["fas", "code"],
     },
     children: [
       {
-        path: "/study/test",
-        name: "/study/test",
-        component: Readme,
+        path: "/study/basics",
+        name: "/study/basics",
+        redirect: "/study/basics/introduction",
         meta: {
-          title: "记录1",
-          icon: ["fas", "scroll"],
-        },
-      },
-      {
-        path: "/study/test2",
-        name: "/study/test2",
-        redirect: "/study/test2/2-2",
-        meta: {
-          title: "记录2",
-          icon: ["fas", "scroll"],
+          title: "基础学习",
+          icon: ["fas", "star"],
         },
         children: [
           {
-            path: "/study/test2/2-2",
-            name: "/study/test2/2-2",
+            path: "/study/basics/introduction",
+            name: "/study/basics/introduction",
+            component: Introduction,
+            meta: {
+              title: "介绍",
+              icon: ["fas", "star"],
+            },
+          }, 
+          {
+            path: "/study/basics/transform",
+            name: "/study/basics/transform",
+            component: Transform,
+            meta: {
+              title: "变化",
+              icon: ["fas", "star"],
+            },
+          }, 
+          {
+            path: "/study/basics/matrix",
+            name: "/study/basics/matrix",
+            component: Matrix,
+            meta: {
+              title: "矩阵",
+              icon: ["fas", "star"],
+            },
+          }, 
+        ]
+      },
+      {
+        path: "/study/classics",
+        name: "/study/classics",
+        redirect: "/study/classics/lights",
+        meta: {
+          title: "经典方法",
+          icon: ["fas", "lightbulb"],
+        },
+        children: [
+          {
+            path: "/study/classics/lights",
+            name: "/study/classics/lights",
+            component: Lights,
+            meta: {
+              title: "灯光",
+              icon: ["fas", "lightbulb"],
+            },
+          },
+        ],
+      },
+      {
+        path: "/study/advanced",
+        name: "/study/advanced",
+        redirect: "/study/advanced/physics",
+        meta: {
+          title: "进阶技术",
+          icon: ["fas", "magnet"],
+        },
+        children: [
+          {
+            path: "/study/advanced/physics",
+            name: "/study/advanced/physics",
             component: DataFlow,
             meta: {
-              title: "记录2-2",
-              icon: ["fas", "scroll"],
+              title: "物理引擎",
+              icon: ["fas", "car"],
+            },
+          },
+        ],
+      },
+      {
+        path: "/study/shaders",
+        name: "/study/shaders",
+        redirect: "/study/shaders/shaders",
+        meta: {
+          title: "着色器",
+          icon: ["fas", "paint-roller"],
+        },
+        children: [
+          {
+            path: "/study/shaders/shaders",
+            name: "/study/shaders/shaders",
+            component: DataFlow,
+            meta: {
+              title: "着色器",
+              icon: ["fas", "paint-roller"],
+            },
+          },
+        ],
+      },
+      {
+        path: "/study/extra",
+        name: "/study/extra",
+        redirect: "/study/extra/processing",
+        meta: {
+          title: "额外知识",
+          icon: ["fas", "share-nodes"],
+        },
+        children: [
+          {
+            path: "/study/extra/processing",
+            name: "/study/extra/processing",
+            component: DataFlow,
+            meta: {
+              title: "后期处理",
+              icon: ["fas", "share-nodes"],
+            },
+          },
+        ],
+      },
+      {
+        path: "/study/react",
+        name: "/study/react",
+        redirect: "/study/react/threeFiber",
+        meta: {
+          title: "React与Three",
+          icon: ["fas", "star-of-david"],
+        },
+        children: [
+          {
+            path: "/study/react/threeFiber",
+            name: "/study/react/threeFiber",
+            component: DataFlow,
+            meta: {
+              title: "ReactThreeFiber",
+              icon: ["fas", "star-of-david"],
             },
           },
         ],
