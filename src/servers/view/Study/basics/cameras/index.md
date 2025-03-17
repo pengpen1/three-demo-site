@@ -1,4 +1,4 @@
-# Matrix
+# Cameras
 
 ### 一、Matrix identity
 
@@ -16,7 +16,7 @@ Linear Transformation Wizard：
 
 旋转矩阵，当且仅当它是**正交矩阵**（绕原点的旋转，旋转不会改变向量的长度和向量之间的角度）并且它的**行列式是1**（改变空间的方向，而不会改变空间的体积）。矩阵值乘以一个三维坐标，得到的结果坐标。点构成线，线构成面，所以矩阵可以对三维物体进行旋转。
 
-投影矩阵，projection matrix，需要满足自身的平方等于自己。投影矩阵乘以一个三维坐标？会将z轴的值归零。待验证
+投影矩阵，projection cameras，需要满足自身的平方等于自己。投影矩阵乘以一个三维坐标？会将z轴的值归零。待验证
 
 
 
@@ -62,6 +62,6 @@ Linear Transformation Wizard：
 
 # reference
 
-- https://www.ruanyifeng.com/blog/2015/09/matrix-multiplication.html
-- https://www.shuxuele.com/algebra/matrix-multiplying.html
+- https://www.ruanyifeng.com/blog/2015/09/cameras-multiplication.html
+- https://www.shuxuele.com/algebra/cameras-multiplying.html
 - https://zhuanlan.zhihu.com/p/362082020

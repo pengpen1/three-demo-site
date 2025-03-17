@@ -10,10 +10,15 @@ const DataFlow2 = () => import("../view/DataFlow2.vue");
 const Building = () => import("../view/Building.vue");
 const Readme = () => import("../view/Readme.vue");
 const SuperMap = () => import("../view/SuperMap.vue");
-const Introduction = () => import("../view/Study/basics/introduction/Introduction.vue");
+const Introduction = () =>
+  import("../view/Study/basics/introduction/Introduction.vue");
 const Transform = () => import("../view/Study/basics/transform/Transform.vue");
 const Matrix = () => import("../view/Study/basics/matrix/Matrix.vue");
 const Lights = () => import("../view/Study/classics/lights/Lights.vue");
+const Animations = () =>
+  import("../view/Study/basics/animations/Animations.vue");
+const Cameras = () => import("../view/Study/basics/cameras/Cameras.vue");
+const Resizing = () => import("../view/Study/basics/resizing/Resizing.vue");
 
 const routes = [
   {
@@ -119,7 +124,7 @@ const routes = [
               title: "介绍",
               icon: ["fas", "star"],
             },
-          }, 
+          },
           {
             path: "/study/basics/transform",
             name: "/study/basics/transform",
@@ -128,7 +133,7 @@ const routes = [
               title: "变化",
               icon: ["fas", "star"],
             },
-          }, 
+          },
           {
             path: "/study/basics/matrix",
             name: "/study/basics/matrix",
@@ -137,8 +142,80 @@ const routes = [
               title: "矩阵",
               icon: ["fas", "star"],
             },
-          }, 
-        ]
+          },
+          {
+            path: "/study/basics/animations",
+            name: "/study/basics/animations",
+            component: Animations,
+            meta: {
+              title: "动画",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/cameras",
+            name: "/study/basics/cameras",
+            component: Cameras,
+            meta: {
+              title: "相机",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/resizing",
+            name: "/study/basics/resizing",
+            component: Resizing,
+            meta: {
+              title: "自适应",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/geometries",
+            name: "/study/basics/geometries",
+            component: Matrix,
+            meta: {
+              title: "几何体",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/gui",
+            name: "/study/basics/gui",
+            component: Matrix,
+            meta: {
+              title: "GUI",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/textures",
+            name: "/study/basics/textures",
+            component: Matrix,
+            meta: {
+              title: "纹理",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/materials",
+            name: "/study/basics/materials",
+            component: Matrix,
+            meta: {
+              title: "材料",
+              icon: ["fas", "star"],
+            },
+          },
+          {
+            path: "/study/basics/text",
+            name: "/study/basics/text",
+            component: Matrix,
+            meta: {
+              title: "文本",
+              icon: ["fas", "star"],
+            },
+          },
+        ],
       },
       {
         path: "/study/classics",
